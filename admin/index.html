@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Administração - Imóveis</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>Administração de Imóveis</h1>
+        <p>Cadastre e gerencie os imóveis da imobiliária.</p>
+    </header>
+
+
+    <main>
+
+        <!-- CADASTRO -->
+
+        <section class="formulario">
+
+            <h2>Cadastrar imóvel</h2>
+
+            <form id="formImovel">
+
+                <div class="campo">
+                    <label for="titulo">Título</label>
+
+                    <input
+                        type="text"
+                        id="titulo"
+                        placeholder="Ex: Casa moderna no Cambuí"
+                        required
+                    >
+                </div>
+
+
+                <div class="linha">
+
+                    <div class="campo">
+
+                        <label for="tipo">Tipo</label>
+
+                        <select id="tipo" required>
+
+                            <option value="">
+                                Selecione
+                            </option>
+
+                            <option value="Casa">
+                                Casa
+                            </option>
+
+                            <option value="Apartamento">
+                                Apartamento
+                            </option>
+
+                            <option value="Terreno">
+                                Terreno
+                            </option>
+
+                            <option value="Comercial">
+                                Comercial
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="campo">
+
+                        <label for="finalidade">
+                            Finalidade
+                        </label>
+
+                        <select id="finalidade" required>
+
+                            <option value="">
+                                Selecione
+                            </option>
+
+                            <option value="Venda">
+                                Venda
+                            </option>
+
+                            <option value="Aluguel">
+                                Aluguel
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <div class="campo">
+
+                    <label for="preco">
+                        Preço
+                    </label>
+
+                    <input
+                        type="number"
+                        id="preco"
+                        placeholder="Ex: 890000"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="linha">
+
+                    <div class="campo">
+
+                        <label for="cidade">
+                            Cidade
+                        </label>
+
+                        <input
+                            type="text"
+                            id="cidade"
+                            placeholder="Campinas"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="campo">
+
+                        <label for="bairro">
+                            Bairro
+                        </label>
+
+                        <input
+                            type="text"
+                            id="bairro"
+                            placeholder="Cambuí"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="campo">
+
+                    <label for="endereco">
+                        Endereço
+                    </label>
+
+                    <input
+                        type="text"
+                        id="endereco"
+                        placeholder="Rua, número..."
+                    >
+
+                </div>
+
+
+                <div class="linha">
+
+                    <div class="campo">
+
+                        <label for="area">
+                            Área (m²)
+                        </label>
+
+                        <input
+                            type="number"
+                            id="area"
+                            placeholder="120"
+                        >
+
+                    </div>
+
+
+                    <div class="campo">
+
+                        <label for="quartos">
+                            Quartos
+                        </label>
+
+                        <input
+                            type="number"
+                            id="quartos"
+                            placeholder="2"
+                        >
+
+                    </div>
+
+
+                    <div class="campo">
+
+                        <label for="banheiros">
+                            Banheiros
+                        </label>
+
+                        <input
+                            type="number"
+                            id="banheiros"
+                            placeholder="2"
+                        >
+
+                    </div>
+
+
+                    <div class="campo">
+
+                        <label for="vagas">
+                            Vagas
+                        </label>
+
+                        <input
+                            type="number"
+                            id="vagas"
+                            placeholder="2"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="campo">
+
+                    <label for="descricao">
+                        Descrição
+                    </label>
+
+                    <textarea
+                        id="descricao"
+                        rows="5"
+                        placeholder="Descreva o imóvel..."
+                    ></textarea>
+
+                </div>
+
+
+                <div class="campo">
+
+                    <label for="imagens">
+                        Imagens
+                    </label>
+
+                    <input
+                        type="text"
+                        id="imagens"
+                        placeholder="URL da imagem"
+                    >
+
+                    <small>
+                        Por enquanto coloque uma URL de imagem.
+                    </small>
+
+                </div>
+
+
+                <div class="checkbox">
+
+                    <label>
+
+                        <input
+                            type="checkbox"
+                            id="destaque"
+                        >
+
+                        Imóvel em destaque
+
+                    </label>
+
+                </div>
+
+
+                <button type="submit">
+                    Cadastrar imóvel
+                </button>
+
+            </form>
+
+            <p id="mensagem"></p>
+
+        </section>
+
+
+        <!-- LISTA -->
+
+        <section class="lista">
+
+            <h2>Imóveis cadastrados</h2>
+
+            <div id="listaImoveis">
+
+                <p>Carregando...</p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
