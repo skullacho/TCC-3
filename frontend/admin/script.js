@@ -1,5 +1,4 @@
 const API = "https://tcc-3-nnmd.onrender.com/api/imoveis";
-alert("SCRIPT ADMIN CARREGOU");
 
 // ========================================
 // ELEMENTOS
