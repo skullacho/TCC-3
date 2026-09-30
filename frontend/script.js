@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // CONFIGURAÇÃO DA API
     // ==========================
 
-    const API = "http://localhost:3000/api/imoveis";
+    const API = "https://tcc-3-nnmd.onrender.com/api/imoveis";
 
     let todosImoveis = [];
     let imoveisExibidos = [];
