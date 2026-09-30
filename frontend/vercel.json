@@ -1,9 +1,0 @@
-{
-  "cleanUrls": true,
-  "rewrites": [
-    {
-      "source": "/imovel",
-      "destination": "/imovel/index.html"
-    }
-  ]
-}
