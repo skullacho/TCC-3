@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hangar Prime Imóveis</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <!-- Ícone da casinha levando para a página inicial -->
+        <a href="https://lp-wbni.vercel.app/" class="header-container" id="logo-container" aria-label="Ir para a página inicial">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                <polyline points="9 22 9 12 15 12 15 22" />
+            </svg>
+        </a>
+
+        <nav class="header-container" id="nav-container">
+            <a class="header-link-nav" href="https://lp-wbni.vercel.app/">Início</a>
+            <a class="header-link-nav" href="https://w.app/hangarprimeim">Contato</a>
+            <a class="header-link-nav" href="https://home-page-f3kv.vercel.app/">Imóveis</a>
+            <a class="header-link-nav" href="https://sobre-nos-kappa.vercel.app/">Sobre Nós</a>
+        </nav>
+
+        <div class="header-container" id="links-container">
+            <div id="header-menu" onclick="toggleMenu()" aria-label="Abrir menu">
+                <div class="hmenu-bars"></div>
+                <div class="hmenu-bars"></div>
+                <div class="hmenu-bars"></div>
+            </div>
+        </div>
+    </header>    
+        
+    <main class="main-content">
+
+        <section class="hero-section">
+            <h1 class="titulo-principal">Referência em locação e vendas em São Paulo</h1>
+    
+            <div class="card-pesquisa">
+                <div class="abas-navegacao">
+                    <button class="btn-aba ativa" onclick="selecionarAba(this)">COMPRAR</button>
+                    <button class="btn-aba" onclick="selecionarAba(this)">ALUGAR</button>
+                    <button class="btn-aba" onclick="selecionarAba(this)">LANÇAMENTOS</button>
+                </div>
+
+                <div class="formulario-filtros">
+                    <div class="linha-campos">
+                        <div class="campo-grupo">
+                            <label>TIPO</label>
+                            <select>
+                                <option>Casa</option>
+                                <option>Apartamento</option>
+                                <option>Tudo</option>
+                            </select>
+                        </div>
+
+                        <div class="campo-grupo">
+                            <label>CIDADE</label>
+                            <select>
+                                <option>São Paulo</option>
+                            </select>
+                        </div>
+
+                        <div class="campo-grupo">
+                            <label>BAIRROS</label>
+                            <select>
+                                <option>Todos</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="linha-campos">
+                        <div class="campo-grupo">
+                            <label>QUARTOS</label>
+                            <select>
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3+</option>
+                            </select>
+                        </div>
+
+                        <div class="campo-grupo valor-container">
+                            <label>VALOR</label>
+                            <div class="inputs-valor">
+                                <input type="text" placeholder="Min">
+                                <input type="text" placeholder="Max">
+                            </div>
+                        </div>
+
+                        <div class="campo-grupo">
+                            <label>CONDOMÍNIOS</label>
+                            <select>
+                                <option>Todos</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="linha-final">
+                        <button class="btn-buscar">BUSCAR IMÓVEIS</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="secondstage">
+            <h2>Imóveis na Planta</h2>
+
+            <div class="cards">
+                <div class="card">
+                    <img src="./img/apartamento 1.jpeg" alt="Arte Vila Matilde">
+                    <div class="card-content">
+                        <h3>Arte Vila Matilde</h3>
+                        <p class="local">Rua Jorge Augusto, 624 – Vila Matilde – SP</p>
+                        <div class="info">
+                            <span>40,9m²</span>
+                            <span>2 quarto(s)</span>
+                            <span>1 vaga(s)</span>
+                        </div>
+                        <p class="price">R$ 447.881,00</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img src="./img/apartamento 2.jpeg" alt="Aviva Residencial">
+                    <div class="card-content">
+                        <h3>Aviva Residencial</h3>
+                        <p class="local">Rua Evans, 497 – Vila Esperança – SP</p>
+                        <div class="info">
+                            <span>50 a 73m²</span>
+                            <span>2 a 3 quarto(s)</span>
+                            <span>1 vaga(s)</span>
+                        </div>
+                        <p class="price">R$ 506.500,00</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img src="./img/apartamento 3.jpeg" alt="Inspire Esperança">
+                    <div class="card-content">
+                        <h3>Inspire Esperança</h3>
+                        <p class="local">Rua Dr. Heládio, 478 – Vila Esperança – SP</p>
+                        <div class="info">
+                            <span>26,5 a 108,2m²</span>
+                            <span>1 a 3 quarto(s)</span>
+                            <span>0 a 1 vaga(s)</span>
+                        </div>
+                        <p class="price">R$ 234.449,00</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img src="./img/apartamento 4.png" alt="Apartamento no Tatuapé">
+                    <div class="card-content">
+                        <h3>Apartamento no Tatuapé</h3>
+                        <p class="local">Rua Airi, 227 - Tatuapé - SP</p>
+                        <div class="info">
+                            <span>73m²</span>
+                            <span>3 quarto(s)</span>
+                            <span>1 vaga(s)</span>
+                        </div>
+                        <p class="price">R$ 324.500,00</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="containermap">
+            <h2>Encontre o seu imóvel pelo mapa</h2>
+            <div class="map-container">
+                <div class="busca">Busca Avançada ⌄</div>
+                <div id="map"></div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="footer">
+            <div class="footer-container">
+
+                <div class="footer-brand">
+                    <h2>Hangar Prime Imóveis</h2>
+                    <p>Construindo caminhos para o seu futuro, um imóvel de cada vez.</p>
+                </div>
+
+                <div class="footer-links">
+                    <h3>Links Rápidos</h3>
+                    <ul>
+                        <li><a href="https://lp-wbni.vercel.app/">Início</a></li>
+                        <li><a href="https://home-page-f3kv.vercel.app/">Imóveis</a></li>
+                        <li><a href="https://sobre-nos-kappa.vercel.app/">Sobre Nós</a></li>
+                        <li><a href="https://w.app/hangarprimeim">Contato</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-contact">
+                    <h3>Contato</h3>
+                    <p>📞 +55 (11) 99582-1428</p>
+                    <p>✉ valter@hangarprime.com.br</p>
+                    <p>📍 São Paulo - SP</p>
+                </div>
+
+                <div class="footer-social">
+                    <h3>Redes Sociais</h3>
+                    <div class="social-icons">
+                        <a href="https://www.instagram.com/imoveishangarprime/" target="_blank" rel="noopener noreferrer">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/company/hangarimobimoveis/?originalSubdomain=br" target="_blank" rel="noopener noreferrer">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://w.app/hangarprimeim" target="_blank" rel="noopener noreferrer">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="footer-bottom">
+                <p>© 2026 Hangar Prime Imóveis. Todos os direitos reservados.</p>
+            </div>
+        </footer>
+
+    </main>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="./style.js"></script>
+    <script>
+        function selecionarAba(elemento) {
+            const botoes = document.querySelectorAll('.btn-aba');
+            botoes.forEach(btn => btn.classList.remove('ativa'));
+            elemento.classList.add('ativa');
+        }
+    </script>
+</body>
+</html>
