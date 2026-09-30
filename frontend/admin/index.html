@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -7,7 +8,8 @@
 
     <title>Administração - Imóveis</title>
 
-    <link rel="stylesheet" href="admin/style.css">
+    <!-- CSS DO ADMIN -->
+    <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
@@ -17,17 +19,16 @@
         <p>Cadastre e gerencie os imóveis da imobiliária.</p>
     </header>
 
-
     <main>
 
         <!-- CADASTRO -->
-
         <section class="formulario">
 
             <h2>Cadastrar imóvel</h2>
 
             <form id="formImovel">
 
+                <!-- TÍTULO -->
                 <div class="campo">
                     <label for="titulo">Título</label>
 
@@ -40,10 +41,10 @@
                 </div>
 
 
+                <!-- TIPO E FINALIDADE -->
                 <div class="linha">
 
                     <div class="campo">
-
                         <label for="tipo">Tipo</label>
 
                         <select id="tipo" required>
@@ -69,12 +70,10 @@
                             </option>
 
                         </select>
-
                     </div>
 
 
                     <div class="campo">
-
                         <label for="finalidade">
                             Finalidade
                         </label>
@@ -94,12 +93,12 @@
                             </option>
 
                         </select>
-
                     </div>
 
                 </div>
 
 
+                <!-- PREÇO -->
                 <div class="campo">
 
                     <label for="preco">
@@ -116,6 +115,7 @@
                 </div>
 
 
+                <!-- CIDADE E BAIRRO -->
                 <div class="linha">
 
                     <div class="campo">
@@ -152,6 +152,7 @@
                 </div>
 
 
+                <!-- ENDEREÇO -->
                 <div class="campo">
 
                     <label for="endereco">
@@ -167,6 +168,7 @@
                 </div>
 
 
+                <!-- INFORMAÇÕES DO IMÓVEL -->
                 <div class="linha">
 
                     <div class="campo">
@@ -231,6 +233,7 @@
                 </div>
 
 
+                <!-- DESCRIÇÃO -->
                 <div class="campo">
 
                     <label for="descricao">
@@ -246,6 +249,7 @@
                 </div>
 
 
+                <!-- IMAGEM -->
                 <div class="campo">
 
                     <label for="imagens">
@@ -265,6 +269,7 @@
                 </div>
 
 
+                <!-- DESTAQUE -->
                 <div class="checkbox">
 
                     <label>
@@ -281,6 +286,7 @@
                 </div>
 
 
+                <!-- BOTÃO -->
                 <button type="submit">
                     Cadastrar imóvel
                 </button>
@@ -292,16 +298,13 @@
         </section>
 
 
-        <!-- LISTA -->
-
+        <!-- LISTA DE IMÓVEIS -->
         <section class="lista">
 
             <h2>Imóveis cadastrados</h2>
 
             <div id="listaImoveis">
-
                 <p>Carregando...</p>
-
             </div>
 
         </section>
@@ -309,8 +312,10 @@
     </main>
 
 
-    <script src="script.js"></script>
+    <!-- JS DO ADMIN -->
+    <script src="./script.js"></script>
 
 </body>
 
 </html>
+```
