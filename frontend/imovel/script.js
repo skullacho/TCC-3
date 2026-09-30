@@ -1,5 +1,5 @@
 const API =
-    "http://localhost:3000/api/imoveis";
+    "https://tcc-3-nnmd.onrender.com/api/imoveis";
 
 
 const container =
