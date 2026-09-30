@@ -1,0 +1,191 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+
+    font-family: Arial, sans-serif;
+
+    background: #f5f5f5;
+
+    color: #222;
+}
+
+
+header {
+    background: #111;
+
+    color: white;
+
+    padding: 30px;
+
+    text-align: center;
+}
+
+
+main {
+    width: 90%;
+
+    max-width: 1100px;
+
+    margin: 40px auto;
+}
+
+
+section {
+    background: white;
+
+    padding: 30px;
+
+    border-radius: 10px;
+
+    margin-bottom: 30px;
+
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+
+h2 {
+    margin-top: 0;
+}
+
+
+.campo {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+
+    margin-bottom: 18px;
+
+    flex: 1;
+}
+
+
+.linha {
+    display: flex;
+
+    gap: 20px;
+}
+
+
+label {
+    font-weight: bold;
+}
+
+
+input,
+select,
+textarea {
+    width: 100%;
+
+    padding: 12px;
+
+    border: 1px solid #ccc;
+
+    border-radius: 6px;
+
+    font-size: 15px;
+}
+
+
+textarea {
+    resize: vertical;
+}
+
+
+small {
+    color: #666;
+}
+
+
+.checkbox {
+    margin: 20px 0;
+}
+
+
+.checkbox input {
+    width: auto;
+}
+
+
+button {
+    border: none;
+
+    background: #111;
+
+    color: white;
+
+    padding: 14px 25px;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+
+    font-size: 16px;
+}
+
+
+button:hover {
+    opacity: 0.85;
+}
+
+
+#mensagem {
+    margin-top: 20px;
+
+    font-weight: bold;
+}
+
+
+.imovel {
+    border: 1px solid #ddd;
+
+    border-radius: 8px;
+
+    padding: 20px;
+
+    margin-bottom: 15px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 20px;
+}
+
+
+.imovel-info h3 {
+    margin: 0 0 8px;
+}
+
+
+.imovel-info p {
+    margin: 5px 0;
+}
+
+
+.btn-excluir {
+    background: #c62828;
+}
+
+
+@media (max-width: 700px) {
+
+    .linha {
+        flex-direction: column;
+
+        gap: 0;
+    }
+
+    .imovel {
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+}
