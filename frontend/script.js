@@ -194,10 +194,6 @@ document.addEventListener("DOMContentLoaded", () => {
                             : ""
                     }
 
-                    <span class="heart">
-                        <i class="fa-solid fa-heart"></i>
-                    </span>
-
                 </div>
 
 
@@ -258,21 +254,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 event.stopPropagation();
 
                 card.classList.toggle("active");
-
-            });
-
-
-            // ==========================
-            // CORAÇÃO
-            // ==========================
-
-            const heart = card.querySelector(".heart");
-
-            heart.addEventListener("click", (event) => {
-
-                event.stopPropagation();
-
-                heart.classList.toggle("active");
 
             });
 
