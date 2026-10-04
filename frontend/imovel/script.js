@@ -21,8 +21,10 @@ async function carregarImovel() {
     if (!id) {
 
         container.innerHTML = `
-            <h1>Imóvel não encontrado</h1>
-            <p>ID do imóvel não informado.</p>
+            <section class="informacoes">
+                <h1>Imóvel não encontrado</h1>
+                <p>ID do imóvel não informado.</p>
+            </section>
         `;
 
         return;
@@ -57,12 +59,18 @@ async function carregarImovel() {
 
 
         container.innerHTML = `
-            <h1>Imóvel não encontrado</h1>
+            <section class="informacoes">
 
-            <p>
-                Não foi possível carregar
-                este imóvel.
-            </p>
+                <h1>
+                    Imóvel não encontrado
+                </h1>
+
+                <p>
+                    Não foi possível carregar
+                    este imóvel.
+                </p>
+
+            </section>
         `;
 
     }
@@ -87,6 +95,15 @@ function mostrarImovel(imovel) {
 
     const caracteristicas =
         imovel.caracteristicas || [];
+
+
+    const possuiLocalizacao =
+        imovel.latitude !== null &&
+        imovel.latitude !== undefined &&
+        imovel.longitude !== null &&
+        imovel.longitude !== undefined &&
+        !isNaN(Number(imovel.latitude)) &&
+        !isNaN(Number(imovel.longitude));
 
 
     container.innerHTML = `
@@ -223,9 +240,107 @@ function mostrarImovel(imovel) {
 
             </div>
 
+
+            <div class="secao-localizacao">
+
+                <h2>
+                    Localização
+                </h2>
+
+                ${
+                    imovel.endereco
+
+                    ? `
+                        <p class="endereco-imovel">
+                            <i class="fa-solid fa-location-dot"></i>
+                            ${imovel.endereco}
+                        </p>
+                    `
+
+                    : ""
+                }
+
+
+                ${
+                    possuiLocalizacao
+
+                    ? `
+                        <div id="mapaImovel"></div>
+                    `
+
+                    : `
+                        <p class="sem-mapa">
+                            Localização no mapa não cadastrada
+                            para este imóvel.
+                        </p>
+                    `
+                }
+
+            </div>
+
         </section>
 
     `;
+
+
+    // ==========================
+    // MAPA DO IMÓVEL
+    // ==========================
+
+    if (possuiLocalizacao) {
+
+        const latitude =
+            Number(imovel.latitude);
+
+        const longitude =
+            Number(imovel.longitude);
+
+
+        const mapa =
+            L.map("mapaImovel").setView(
+                [
+                    latitude,
+                    longitude
+                ],
+                16
+            );
+
+
+        L.tileLayer(
+            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            {
+                maxZoom: 19,
+
+                attribution:
+                    "&copy; OpenStreetMap"
+            }
+        ).addTo(mapa);
+
+
+        const marcador =
+            L.marker([
+                latitude,
+                longitude
+            ])
+            .addTo(mapa);
+
+
+        marcador.bindPopup(`
+            <strong>
+                ${imovel.titulo}
+            </strong>
+
+            ${
+                imovel.endereco
+
+                ? `<br>${imovel.endereco}`
+
+                : ""
+            }
+        `);
+
+    }
+
 }
 
 
