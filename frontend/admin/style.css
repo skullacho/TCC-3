@@ -8,11 +8,17 @@
     box-sizing: border-box;
 }
 
+
 body {
     min-height: 100vh;
-    font-family: Arial, Helvetica, sans-serif;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
 
     background: #301515;
+
     color: #222;
 }
 
@@ -23,29 +29,36 @@ body {
 
 header {
     width: 100%;
+
     background: #111;
+
     color: white;
 
     padding: 28px 40px;
 }
 
+
 header h1 {
     font-size: 28px;
+
     margin-bottom: 6px;
 }
 
+
 header p {
     color: #ccc;
+
     font-size: 14px;
 }
 
 
 /* =========================================
-   CONTEÚDO PRINCIPAL
+   CONTEÚDO
 ========================================= */
 
 main {
     width: 92%;
+
     max-width: 1200px;
 
     margin: 40px auto;
@@ -65,8 +78,11 @@ section {
 
     margin-bottom: 30px;
 
-    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+    box-shadow:
+        0 3px 15px
+        rgba(0, 0, 0, 0.08);
 }
+
 
 section h2 {
     font-size: 22px;
@@ -85,8 +101,10 @@ section h2 {
     width: 100%;
 }
 
+
 .campo {
     display: flex;
+
     flex-direction: column;
 
     flex: 1;
@@ -94,8 +112,10 @@ section h2 {
     margin-bottom: 18px;
 }
 
+
 .campo label {
     font-size: 14px;
+
     font-weight: 600;
 
     margin-bottom: 7px;
@@ -136,7 +156,8 @@ section h2 {
 
     background: white;
 
-    border: 1px solid #d5d5d5;
+    border:
+        1px solid #d5d5d5;
 
     border-radius: 7px;
 
@@ -146,18 +167,16 @@ section h2 {
 }
 
 
-/* FOCUS */
-
 .campo input:focus,
 .campo select:focus,
 .campo textarea:focus {
     border-color: #111;
 
-    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.06);
+    box-shadow:
+        0 0 0 2px
+        rgba(0, 0, 0, 0.06);
 }
 
-
-/* PLACEHOLDER */
 
 .campo input::placeholder,
 .campo textarea::placeholder {
@@ -165,16 +184,12 @@ section h2 {
 }
 
 
-/* TEXTAREA */
-
 .campo textarea {
     min-height: 120px;
 
     resize: vertical;
 }
 
-
-/* TEXTO PEQUENO */
 
 .campo small {
     margin-top: 7px;
@@ -186,12 +201,116 @@ section h2 {
 
 
 /* =========================================
+   MAPA
+========================================= */
+
+.campo-mapa {
+    margin-top: 8px;
+
+    margin-bottom: 25px;
+}
+
+
+.mapa-instrucao {
+    font-size: 14px;
+
+    color: #555;
+
+    margin-bottom: 12px;
+}
+
+
+#mapaCadastro {
+    display: block;
+
+    position: relative;
+
+    width: 100%;
+
+    height: 420px;
+
+    min-height: 420px;
+
+    background: #e5e5e5;
+
+    border:
+        1px solid #d5d5d5;
+
+    border-radius: 10px;
+
+    overflow: hidden;
+
+    z-index: 1;
+}
+
+
+/* =========================================
+   ERRO DO MAPA
+========================================= */
+
+.erro-mapa {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 100%;
+
+    height: 100%;
+
+    color: #c62828;
+
+    font-weight: 600;
+
+    background: #f5f5f5;
+}
+
+
+/* =========================================
+   STATUS DA LOCALIZAÇÃO
+========================================= */
+
+.localizacao-status {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-top: 12px;
+
+    padding: 11px 13px;
+
+    background: #f5f5f5;
+
+    border:
+        1px solid #e3e3e3;
+
+    border-radius: 7px;
+
+    color: #555;
+
+    font-size: 14px;
+}
+
+
+#textoLocalizacao.selecionada {
+    color: #2e7d32;
+
+    font-weight: 600;
+}
+
+
+/* =========================================
    CHECKBOX
 ========================================= */
 
 .checkbox {
-    margin: 10px 0 25px;
+    margin:
+        10px 0 25px;
 }
+
 
 .checkbox label {
     display: flex;
@@ -205,8 +324,10 @@ section h2 {
     font-size: 14px;
 }
 
+
 .checkbox input {
     width: 17px;
+
     height: 17px;
 
     cursor: pointer;
@@ -221,6 +342,7 @@ section h2 {
     border: none;
 
     background: #111;
+
     color: white;
 
     padding: 13px 24px;
@@ -228,6 +350,7 @@ section h2 {
     border-radius: 7px;
 
     font-size: 15px;
+
     font-weight: 600;
 
     cursor: pointer;
@@ -235,10 +358,12 @@ section h2 {
     transition: 0.2s;
 }
 
+
 #formImovel button[type="submit"]:hover {
     background: #333;
 
-    transform: translateY(-1px);
+    transform:
+        translateY(-1px);
 }
 
 
@@ -256,7 +381,7 @@ section h2 {
 
 
 /* =========================================
-   LISTA DE IMÓVEIS
+   LISTA
 ========================================= */
 
 #listaImoveis {
@@ -269,36 +394,42 @@ section h2 {
 
 
 /* =========================================
-   IMÓVEL CADASTRADO
+   IMÓVEL
 ========================================= */
 
 .imovel {
     display: flex;
 
-    justify-content: space-between;
+    justify-content:
+        space-between;
 
-    align-items: center;
+    align-items:
+        center;
 
     gap: 20px;
 
     padding: 20px;
 
-    border: 1px solid #e0e0e0;
+    border:
+        1px solid #e0e0e0;
 
     border-radius: 9px;
 
     background: #fafafa;
 }
 
+
 .imovel-info {
     flex: 1;
 }
+
 
 .imovel-info h3 {
     font-size: 18px;
 
     margin-bottom: 8px;
 }
+
 
 .imovel-info p {
     margin: 4px 0;
@@ -309,14 +440,27 @@ section h2 {
 }
 
 
+.localizacao-cadastrada {
+    color: #2e7d32 !important;
+
+    font-weight: 600;
+}
+
+
+.localizacao-nao-cadastrada {
+    color: #888 !important;
+}
+
+
 /* =========================================
-   BOTÃO EXCLUIR
+   EXCLUIR
 ========================================= */
 
 .btn-excluir {
     border: none;
 
     background: #c62828;
+
     color: white;
 
     padding: 10px 16px;
@@ -330,8 +474,25 @@ section h2 {
     transition: 0.2s;
 }
 
+
 .btn-excluir:hover {
     background: #a71919;
+}
+
+
+/* =========================================
+   LEAFLET
+========================================= */
+
+.leaflet-container {
+    width: 100%;
+
+    height: 100%;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
 }
 
 
@@ -342,22 +503,28 @@ section h2 {
 @media (max-width: 768px) {
 
     header {
-        padding: 22px 20px;
+        padding:
+            22px 20px;
     }
+
 
     header h1 {
         font-size: 23px;
     }
 
+
     main {
         width: 94%;
 
-        margin: 25px auto;
+        margin:
+            25px auto;
     }
+
 
     section {
         padding: 20px;
     }
+
 
     .linha {
         flex-direction: column;
@@ -365,13 +532,24 @@ section h2 {
         gap: 0;
     }
 
+
+    #mapaCadastro {
+        height: 320px;
+
+        min-height: 320px;
+    }
+
+
     .imovel {
         flex-direction: column;
 
-        align-items: flex-start;
+        align-items:
+            flex-start;
     }
+
 
     .btn-excluir {
         width: 100%;
     }
+
 }

@@ -3,18 +3,35 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Administração - Imóveis</title>
 
-    <link rel="stylesheet" href="admin/style.css">
+    <link
+        rel="stylesheet"
+        href="./style.css"
+    >
+
+    <!-- LEAFLET CSS -->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        crossorigin=""
+    >
 </head>
 
 <body>
 
     <header>
         <h1>Administração de Imóveis</h1>
-        <p>Cadastre e gerencie os imóveis da imobiliária.</p>
+
+        <p>
+            Cadastre e gerencie os imóveis da imobiliária.
+        </p>
     </header>
 
 
@@ -26,10 +43,16 @@
 
             <h2>Cadastrar imóvel</h2>
 
+
             <form id="formImovel">
 
+                <!-- TÍTULO -->
+
                 <div class="campo">
-                    <label for="titulo">Título</label>
+
+                    <label for="titulo">
+                        Título
+                    </label>
 
                     <input
                         type="text"
@@ -37,14 +60,19 @@
                         placeholder="Ex: Casa moderna no Cambuí"
                         required
                     >
+
                 </div>
 
+
+                <!-- TIPO / FINALIDADE -->
 
                 <div class="linha">
 
                     <div class="campo">
 
-                        <label for="tipo">Tipo</label>
+                        <label for="tipo">
+                            Tipo
+                        </label>
 
                         <select id="tipo" required>
 
@@ -100,6 +128,8 @@
                 </div>
 
 
+                <!-- PREÇO -->
+
                 <div class="campo">
 
                     <label for="preco">
@@ -115,6 +145,8 @@
 
                 </div>
 
+
+                <!-- CIDADE / BAIRRO -->
 
                 <div class="linha">
 
@@ -152,6 +184,8 @@
                 </div>
 
 
+                <!-- ENDEREÇO -->
+
                 <div class="campo">
 
                     <label for="endereco">
@@ -166,6 +200,37 @@
 
                 </div>
 
+
+                <!-- MAPA -->
+
+                <div class="campo campo-mapa">
+
+                    <label>
+                        Localização do imóvel
+                    </label>
+
+                    <p class="mapa-instrucao">
+                        Clique no mapa para marcar onde o imóvel está.
+                    </p>
+
+                    <div id="mapaCadastro"></div>
+
+                    <div class="localizacao-status">
+
+                        <span>
+                            📍
+                        </span>
+
+                        <span id="textoLocalizacao">
+                            Nenhuma localização selecionada
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- INFORMAÇÕES -->
 
                 <div class="linha">
 
@@ -231,6 +296,8 @@
                 </div>
 
 
+                <!-- DESCRIÇÃO -->
+
                 <div class="campo">
 
                     <label for="descricao">
@@ -245,6 +312,8 @@
 
                 </div>
 
+
+                <!-- IMAGEM -->
 
                 <div class="campo">
 
@@ -264,6 +333,8 @@
 
                 </div>
 
+
+                <!-- DESTAQUE -->
 
                 <div class="checkbox">
 
@@ -287,6 +358,7 @@
 
             </form>
 
+
             <p id="mensagem"></p>
 
         </section>
@@ -296,11 +368,15 @@
 
         <section class="lista">
 
-            <h2>Imóveis cadastrados</h2>
+            <h2>
+                Imóveis cadastrados
+            </h2>
 
             <div id="listaImoveis">
 
-                <p>Carregando...</p>
+                <p>
+                    Carregando...
+                </p>
 
             </div>
 
@@ -309,7 +385,17 @@
     </main>
 
 
-    <script src="admin/script.js"></script>
+    <!--
+        IMPORTANTE:
+        Leaflet precisa carregar ANTES do nosso script.
+    -->
+
+    <script
+        src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        crossorigin=""
+    ></script>
+
+    <script src="./script.js"></script>
 
 </body>
 
