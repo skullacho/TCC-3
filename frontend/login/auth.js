@@ -1,5 +1,15 @@
 const AUTH_API = "https://tcc-3-nnmd.onrender.com/api/auth";
-const DESTINO_APOS_LOGIN = "https://tcc-3-frontend.vercel.app/";
+const ORIGEM_CATALOGO = "https://tcc-3-frontend.vercel.app";
+const parametros = new URLSearchParams(window.location.search);
+function destinoSeguro() {
+  const recebido = parametros.get("retorno");
+  if (!recebido) return `${ORIGEM_CATALOGO}/filter-main/`;
+  try {
+    const url = new URL(recebido);
+    if (url.origin === ORIGEM_CATALOGO && url.protocol === "https:") return url.href;
+  } catch {}
+  return `${ORIGEM_CATALOGO}/filter-main/`;
+}
 
 async function requisitar(rota, dados) {
   const resposta = await fetch(`${AUTH_API}/${rota}`, {
@@ -19,10 +29,13 @@ function status(id, mensagem, erro = false) {
 }
 
 function concluirLogin(dados) {
-  // Sessão da aba atual; a API deve validar o token em todas as operações protegidas.
-  sessionStorage.setItem("hangar_token", dados.token);
-  sessionStorage.setItem("hangar_usuario", JSON.stringify(dados.usuario));
-  window.location.assign(DESTINO_APOS_LOGIN);
+  // Login e catálogo estão em origens diferentes: sessionStorage não é compartilhado.
+  // Encaminha a sessão somente para o domínio fixo e autorizado do catálogo.
+  // O catálogo remove o fragmento da URL imediatamente ao recebê-lo.
+  if (!dados.token) throw new Error("O servidor não retornou a sessão.");
+  const url = new URL(destinoSeguro());
+  url.hash = `hangar_auth=${encodeURIComponent(dados.token)}`;
+  window.location.replace(url.href);
 }
 
 document.getElementById("form-login").addEventListener("submit", async (e) => {
