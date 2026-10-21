@@ -25,7 +25,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const PENDENTE_KEY = "hangar_imovel_agendar";
     function irParaLogin(imovelId = null) {
         if (imovelId) sessionStorage.setItem(PENDENTE_KEY, String(imovelId));
-        location.assign(LOGIN_URL);
+        const destino = new URL(LOGIN_URL);
+        destino.searchParams.set("retorno", location.origin + location.pathname + location.search);
+        location.assign(destino.toString());
     }
     function abrirAgenda(imovel) {
         if (!token()) {
@@ -103,7 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (erro) { listaAgenda.textContent = erro.message; }
     }
     document.getElementById("btn-meus-agendamentos").addEventListener("click", () => {
-        if (!token()) { sessionStorage.setItem("hangar_abrir_meus", "1"); location.href = LOGIN_URL; return; }
+        if (!token()) { sessionStorage.setItem("hangar_abrir_meus", "1"); irParaLogin(); return; }
         carregarMeusAgendamentos();
     });
     if (token()) {
