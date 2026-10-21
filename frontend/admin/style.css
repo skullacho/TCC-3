@@ -1,3 +1,4 @@
+
 /* =========================================
    RESET
 ========================================= */
@@ -7,7 +8,6 @@
     padding: 0;
     box-sizing: border-box;
 }
-
 
 body {
     min-height: 100vh;
@@ -37,13 +37,11 @@ header {
     padding: 28px 40px;
 }
 
-
 header h1 {
     font-size: 28px;
 
     margin-bottom: 6px;
 }
-
 
 header p {
     color: #ccc;
@@ -83,7 +81,6 @@ section {
         rgba(0, 0, 0, 0.08);
 }
 
-
 section h2 {
     font-size: 22px;
 
@@ -101,7 +98,6 @@ section h2 {
     width: 100%;
 }
 
-
 .campo {
     display: flex;
 
@@ -111,7 +107,6 @@ section h2 {
 
     margin-bottom: 18px;
 }
-
 
 .campo label {
     font-size: 14px;
@@ -166,7 +161,6 @@ section h2 {
     transition: 0.2s;
 }
 
-
 .campo input:focus,
 .campo select:focus,
 .campo textarea:focus {
@@ -177,19 +171,16 @@ section h2 {
         rgba(0, 0, 0, 0.06);
 }
 
-
 .campo input::placeholder,
 .campo textarea::placeholder {
     color: #999;
 }
-
 
 .campo textarea {
     min-height: 120px;
 
     resize: vertical;
 }
-
 
 .campo small {
     margin-top: 7px;
@@ -210,7 +201,6 @@ section h2 {
     margin-bottom: 25px;
 }
 
-
 .mapa-instrucao {
     font-size: 14px;
 
@@ -218,7 +208,6 @@ section h2 {
 
     margin-bottom: 12px;
 }
-
 
 #mapaCadastro {
     display: block;
@@ -294,7 +283,6 @@ section h2 {
     font-size: 14px;
 }
 
-
 #textoLocalizacao.selecionada {
     color: #2e7d32;
 
@@ -311,7 +299,6 @@ section h2 {
         10px 0 25px;
 }
 
-
 .checkbox label {
     display: flex;
 
@@ -324,7 +311,6 @@ section h2 {
     font-size: 14px;
 }
 
-
 .checkbox input {
     width: 17px;
 
@@ -335,7 +321,7 @@ section h2 {
 
 
 /* =========================================
-   BOTÃO CADASTRAR
+   BOTÃO CADASTRAR / SALVAR
 ========================================= */
 
 #formImovel button[type="submit"] {
@@ -358,12 +344,19 @@ section h2 {
     transition: 0.2s;
 }
 
-
 #formImovel button[type="submit"]:hover {
     background: #333;
 
     transform:
         translateY(-1px);
+}
+
+#formImovel button[type="submit"]:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+
+    transform: none;
 }
 
 
@@ -418,18 +411,17 @@ section h2 {
     background: #fafafa;
 }
 
-
 .imovel-info {
     flex: 1;
-}
 
+    min-width: 0;
+}
 
 .imovel-info h3 {
     font-size: 18px;
 
     margin-bottom: 8px;
 }
-
 
 .imovel-info p {
     margin: 4px 0;
@@ -439,16 +431,62 @@ section h2 {
     font-size: 14px;
 }
 
-
 .localizacao-cadastrada {
     color: #2e7d32 !important;
 
     font-weight: 600;
 }
 
-
 .localizacao-nao-cadastrada {
     color: #888 !important;
+}
+
+
+/* =========================================
+   AÇÕES DO IMÓVEL
+========================================= */
+
+.acoes-imovel {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    flex-wrap: wrap;
+}
+
+.acoes-imovel button {
+    white-space: nowrap;
+}
+
+
+/* =========================================
+   EDITAR
+========================================= */
+
+.btn-editar {
+    border: none;
+
+    background: #2563eb;
+
+    color: white;
+
+    padding: 10px 16px;
+
+    border-radius: 6px;
+
+    font-size: 14px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.btn-editar:hover {
+    background: #1d4ed8;
 }
 
 
@@ -473,7 +511,6 @@ section h2 {
 
     transition: 0.2s;
 }
-
 
 .btn-excluir:hover {
     background: #a71919;
@@ -507,11 +544,9 @@ section h2 {
             22px 20px;
     }
 
-
     header h1 {
         font-size: 23px;
     }
-
 
     main {
         width: 94%;
@@ -520,11 +555,9 @@ section h2 {
             25px auto;
     }
 
-
     section {
         padding: 20px;
     }
-
 
     .linha {
         flex-direction: column;
@@ -532,13 +565,11 @@ section h2 {
         gap: 0;
     }
 
-
     #mapaCadastro {
         height: 320px;
 
         min-height: 320px;
     }
-
 
     .imovel {
         flex-direction: column;
@@ -547,40 +578,28 @@ section h2 {
             flex-start;
     }
 
+    .acoes-imovel {
+        width: 100%;
 
+        justify-content: stretch;
+    }
+
+    .btn-editar,
+    .btn-excluir {
+        flex: 1;
+
+        min-width: 0;
+    }
+}
+
+@media (max-width: 400px) {
+
+    .acoes-imovel {
+        flex-direction: column;
+    }
+
+    .btn-editar,
     .btn-excluir {
         width: 100%;
     }
-   .acoes-imovel {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-   }
-
-   .btn-editar {
-       background: #2563eb;
-       color: white;
-       border: none;
-       border-radius: 6px;
-       padding: 10px 18px;
-       cursor: pointer;
-   }
-   
-   .btn-editar:hover {
-       background: #1d4ed8;
-   }
-
 }
-/* Login administrativo — isolado do visual do painel */
-[hidden] { display: none !important; }
-.admin-login-page { min-height: 100vh; display: grid; place-items: center; padding: 24px; background: #301515; }
-.admin-login-box { width: min(100%, 420px); background: #fff; border-radius: 16px; padding: 36px; box-shadow: 0 16px 45px #0005; display: flex; flex-direction: column; gap: 12px; }
-.admin-login-logo { font-size: 38px; color: #301515; text-align: center; }
-.admin-login-box h2 { text-align: center; color: #301515; font-size: 26px; }
-.admin-login-box > p { text-align: center; color: #666; margin-bottom: 12px; }
-.admin-login-box label { font-weight: bold; font-size: 14px; }
-.admin-login-box input { padding: 13px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; }
-.admin-login-box button { padding: 14px; border: none; border-radius: 8px; background: #301515; color: #fff; cursor: pointer; font-weight: bold; margin-top: 8px; }
-.admin-login-box #adminLoginErro { color: #b42318; font-size: 14px; min-height: 18px; margin: 0; }
-.admin-sair { float: right; padding: 9px 18px; background: #8c3030; color: #fff; border: 0; border-radius: 8px; cursor: pointer; }
