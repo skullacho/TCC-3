@@ -4,13 +4,12 @@ import cors from "cors";
 import dotenv from "dotenv";
 
 import imovelRoutes from "./routes/imovelRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 
 // Carrega o .env que está na mesma pasta do server.js
 dotenv.config({
   path: new URL("./.env", import.meta.url)
 });
-
-console.log("MONGODB_URI:", process.env.MONGODB_URI);
 
 const app = express();
 
@@ -18,12 +17,18 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/imoveis", imovelRoutes);
+app.use("/api/auth", authRoutes);
 
 app.get("/", (req, res) => {
   res.json({
     mensagem: "API da imobiliária funcionando!"
   });
 });
+
+if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
+  console.error("Configure JWT_SECRET com pelo menos 32 caracteres no ambiente.");
+  process.exit(1);
+}
 
 if (!process.env.MONGODB_URI) {
   console.error(
