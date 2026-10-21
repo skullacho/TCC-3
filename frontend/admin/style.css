@@ -565,3 +565,13 @@ section h2 {
 .admin-login-box button { padding: 14px; border: none; border-radius: 8px; background: #301515; color: #fff; cursor: pointer; font-weight: bold; margin-top: 8px; }
 .admin-login-box #adminLoginErro { color: #b42318; font-size: 14px; min-height: 18px; margin: 0; }
 .admin-sair { float: right; padding: 9px 18px; background: #8c3030; color: #fff; border: 0; border-radius: 8px; cursor: pointer; }
+
+
+/* Botão editar: estilos adicionados sem alterar os anteriores */
+.acoes-imovel { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.btn-editar { border: none; background: #2563eb; color: white; padding: 10px 16px; border-radius: 6px; font-size: 14px; cursor: pointer; transition: 0.2s; }
+.btn-editar:hover { background: #1d4ed8; }
+@media (max-width: 768px) {
+    .acoes-imovel { width: 100%; }
+    .acoes-imovel .btn-editar, .acoes-imovel .btn-excluir { flex: 1; }
+}

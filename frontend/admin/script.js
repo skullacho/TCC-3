@@ -30,6 +30,7 @@ let longitudeSelecionada = null;
 let marcador = null;
 
 let mapa = null;
+let imovelEmEdicao = null;
 
 
 // ========================================
@@ -310,14 +311,20 @@ form.addEventListener(
         };
 
 
+        // Preservar campos não editados ao atualizar.
+        if (imovelEmEdicao) {
+            delete imovel.caracteristicas;
+            delete imovel.lancamento;
+        }
+
         // ========================================
-        // POST
+        // POST / PUT
         // ========================================
 
         try {
 
             mensagem.textContent =
-                "Cadastrando imóvel...";
+                imovelEmEdicao ? "Salvando alterações..." : "Cadastrando imóvel...";
 
             mensagem.style.color =
                 "#333";
@@ -325,10 +332,10 @@ form.addEventListener(
 
             const resposta =
                 await fetch(
-                    API,
+                    imovelEmEdicao ? `${API}/${imovelEmEdicao}` : API,
                     {
                         method:
-                            "POST",
+                            imovelEmEdicao ? "PUT" : "POST",
 
                         headers: {
                             "Content-Type":
@@ -363,7 +370,10 @@ form.addEventListener(
             // ========================================
 
             mensagem.textContent =
-                "Imóvel cadastrado com sucesso!";
+                imovelEmEdicao ? "Imóvel atualizado com sucesso!" : "Imóvel cadastrado com sucesso!";
+            imovelEmEdicao = null;
+            const botao = form.querySelector('[type="submit"]');
+            if (botao) botao.textContent = "Cadastrar imóvel";
 
             mensagem.style.color =
                 "green";
@@ -545,12 +555,15 @@ async function carregarImoveis() {
                     </div>
 
 
+                    <div class="acoes-imovel">
+                    <button type="button" class="btn-editar" onclick="editarImovel('${imovel._id}')">Editar</button>
                     <button
                         class="btn-excluir"
                         onclick="excluirImovel('${imovel._id}')"
                     >
                         Excluir
                     </button>
+                    </div>
 
                 `;
 
@@ -581,6 +594,59 @@ async function carregarImoveis() {
 
 }
 
+
+// ========================================
+// EDITAR IMÓVEL
+// ========================================
+
+async function editarImovel(id) {
+    try {
+        const resposta = await fetch(`${API}/${id}`);
+        if (!resposta.ok) throw new Error("Erro ao buscar imóvel");
+        const imovel = await resposta.json();
+
+        const campos = [
+            "titulo", "tipo", "finalidade", "preco", "cidade",
+            "bairro", "endereco", "area", "quartos", "banheiros",
+            "vagas", "descricao"
+        ];
+        campos.forEach(nome => {
+            const campo = document.getElementById(nome);
+            if (campo) campo.value = imovel[nome] ?? "";
+        });
+        document.getElementById("imagens").value = imovel.imagens?.[0] || "";
+        document.getElementById("destaque").checked = Boolean(imovel.destaque);
+
+        latitudeSelecionada = imovel.latitude ?? null;
+        longitudeSelecionada = imovel.longitude ?? null;
+        if (marcador && mapa) {
+            mapa.removeLayer(marcador);
+            marcador = null;
+        }
+        if (latitudeSelecionada !== null && longitudeSelecionada !== null && mapa) {
+            const posicao = [Number(latitudeSelecionada), Number(longitudeSelecionada)];
+            marcador = L.marker(posicao).addTo(mapa);
+            marcador.bindPopup("Localização do imóvel");
+            mapa.setView(posicao, 15);
+            textoLocalizacao.textContent = "Localização selecionada ✓";
+            textoLocalizacao.classList.add("selecionada");
+        } else {
+            textoLocalizacao.textContent = "Nenhuma localização selecionada";
+            textoLocalizacao.classList.remove("selecionada");
+        }
+
+        imovelEmEdicao = id;
+        const botao = form.querySelector('[type="submit"]');
+        if (botao) botao.textContent = "Salvar alterações";
+        mensagem.textContent = "Editando imóvel. Altere os campos e salve.";
+        mensagem.style.color = "#333";
+        form.scrollIntoView({ behavior: "smooth", block: "start" });
+        if (mapa) setTimeout(() => mapa.invalidateSize(), 350);
+    } catch (error) {
+        console.error("Erro ao editar imóvel:", error);
+        alert("Não foi possível carregar o imóvel para edição.");
+    }
+}
 
 // ========================================
 // EXCLUIR
