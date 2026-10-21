@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 
 import imovelRoutes from "./routes/imovelRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
+import agendamentoRoutes from "./routes/agendamentoRoutes.js";
 
 // Carrega o .env que está na mesma pasta do server.js
 dotenv.config({
@@ -18,6 +19,7 @@ app.use(express.json());
 
 app.use("/api/imoveis", imovelRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/agendamentos", agendamentoRoutes);
 
 app.get("/", (req, res) => {
   res.json({
