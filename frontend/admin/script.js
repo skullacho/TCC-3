@@ -332,7 +332,8 @@ form.addEventListener(
 
                         headers: {
                             "Content-Type":
-                                "application/json"
+                                "application/json",
+                            "Authorization": `Bearer ${window.AdminAuth.token()}`
                         },
 
                         body:
@@ -607,7 +608,8 @@ async function excluirImovel(id) {
                 `${API}/${id}`,
                 {
                     method:
-                        "DELETE"
+                        "DELETE",
+                    headers: { "Authorization": `Bearer ${window.AdminAuth.token()}` }
                 }
             );
 
@@ -644,6 +646,7 @@ async function excluirImovel(id) {
 // INICIAR
 // ========================================
 
-iniciarMapa();
-
-carregarImoveis();
+window.addEventListener("admin-autenticado", () => {
+    if (!mapa) iniciarMapa();
+    carregarImoveis();
+});

@@ -13,7 +13,7 @@
 
     <link
         rel="stylesheet"
-        href="admin/style.css"
+        href="style.css"
     >
 
     <!-- LEAFLET CSS -->
@@ -25,9 +25,24 @@
 </head>
 
 <body>
+    <section id="adminLogin" class="admin-login-page">
+      <form id="adminLoginForm" class="admin-login-box" autocomplete="on">
+        <div class="admin-login-logo">⌂</div>
+        <h2>Hangar Prime</h2>
+        <p>Acesso exclusivo à administração</p>
+        <label for="adminUsuario">Usuário</label>
+        <input id="adminUsuario" name="username" autocomplete="username" required maxlength="80" />
+        <label for="adminSenha">Senha</label>
+        <input id="adminSenha" name="password" type="password" autocomplete="current-password" required />
+        <button type="submit" id="adminEntrar">Entrar no painel</button>
+        <p id="adminLoginErro" role="alert" aria-live="polite"></p>
+      </form>
+    </section>
+    <div id="adminPainel" hidden>
 
     <header>
         <h1>Administração de Imóveis</h1>
+        <button type="button" id="adminSair" class="admin-sair">Sair</button>
 
         <p>
             Cadastre e gerencie os imóveis da imobiliária.
@@ -390,12 +405,15 @@
         Leaflet precisa carregar ANTES do nosso script.
     -->
 
+    </div>
+
     <script
         src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         crossorigin=""
     ></script>
 
-    <script src="admin/script.js"></script>
+    <script src="auth-admin.js"></script>
+    <script src="script.js"></script>
 
 </body>
 
