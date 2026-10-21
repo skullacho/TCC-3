@@ -6,6 +6,114 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const API = "https://tcc-3-nnmd.onrender.com/api/imoveis";
 
+    const API_AGENDA = "https://tcc-3-nnmd.onrender.com/api/agendamentos";
+    const LOGIN_URL = "https://tcc-3-login.vercel.app/";
+    // Recebe a sessão do login hospedado em outro domínio.
+    // O token chega no fragmento (#), que não é enviado ao servidor.
+    const retornoAuth = new URLSearchParams(location.hash.slice(1));
+    if (retornoAuth.has("hangar_auth")) {
+        const recebido = retornoAuth.get("hangar_auth");
+        if (recebido) sessionStorage.setItem("hangar_token", recebido);
+        history.replaceState(null, "", location.pathname + location.search);
+    }
+    let imovelEscolhido = null;
+    let horarioEscolhido = null;
+    const modalAgenda = document.getElementById("modal-agendamento");
+    const formAgenda = document.getElementById("form-agendamento");
+    const mensagemAgenda = document.getElementById("agenda-mensagem");
+    const token = () => sessionStorage.getItem("hangar_token");
+    const PENDENTE_KEY = "hangar_imovel_agendar";
+    function irParaLogin(imovelId = null) {
+        if (imovelId) sessionStorage.setItem(PENDENTE_KEY, String(imovelId));
+        location.assign(LOGIN_URL);
+    }
+    function abrirAgenda(imovel) {
+        if (!token()) {
+            irParaLogin(imovel._id);
+            return;
+        }
+        imovelEscolhido = imovel;
+        horarioEscolhido = null;
+        document.querySelectorAll(".agenda-horarios button").forEach(b => b.classList.remove("selecionado"));
+        document.getElementById("agenda-imovel").textContent = imovel.titulo || "Imóvel";
+        mensagemAgenda.textContent = "";
+        formAgenda.reset();
+        modalAgenda.hidden = false;
+        document.getElementById("agenda-data").focus();
+    }
+    document.getElementById("fechar-agendamento").onclick = () => modalAgenda.hidden = true;
+    modalAgenda.addEventListener("click", e => { if (e.target === modalAgenda) modalAgenda.hidden = true; });
+    document.addEventListener("keydown", e => { if (e.key === "Escape") modalAgenda.hidden = true; });
+    document.querySelectorAll(".agenda-horarios button").forEach(btn => btn.addEventListener("click", () => {
+        horarioEscolhido = btn.dataset.hora;
+        document.querySelectorAll(".agenda-horarios button").forEach(b => b.classList.toggle("selecionado", b === btn));
+    }));
+    const diaSP = () => new Intl.DateTimeFormat("en-CA", { timeZone: "America/Sao_Paulo", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
+    document.getElementById("agenda-data").min = diaSP();
+    formAgenda.addEventListener("submit", async e => {
+        e.preventDefault();
+        if (!horarioEscolhido) { mensagemAgenda.textContent = "Escolha um horário."; return; }
+        const btn = formAgenda.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        mensagemAgenda.textContent = "Registrando solicitação...";
+        try {
+            const resposta = await fetch(API_AGENDA, { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${token()}` }, body: JSON.stringify({ imovelId: imovelEscolhido._id, data: document.getElementById("agenda-data").value, horario: horarioEscolhido, telefone: document.getElementById("agenda-telefone").value }) });
+            const dados = await resposta.json();
+            if (!resposta.ok) throw new Error(dados.erro || "Falha ao solicitar visita.");
+            mensagemAgenda.textContent = dados.mensagem;
+            await carregarMeusAgendamentos();
+            formAgenda.reset();
+            horarioEscolhido = null;
+            document.querySelectorAll(".agenda-horarios button").forEach(b => b.classList.remove("selecionado"));
+        } catch (erro) {
+            mensagemAgenda.textContent = erro.message;
+            if (/sessão|login/i.test(erro.message)) sessionStorage.removeItem("hangar_token");
+        } finally { btn.disabled = false; }
+    });
+    const listaAgenda = document.getElementById("lista-agendamentos");
+    async function carregarMeusAgendamentos() {
+        if (!token()) { listaAgenda.textContent = "Entre na sua conta para consultar suas visitas."; return; }
+        listaAgenda.textContent = "Carregando...";
+        try {
+            const resposta = await fetch(`${API_AGENDA}/meus`, { headers: { Authorization: `Bearer ${token()}` } });
+            const dados = await resposta.json();
+            if (!resposta.ok) throw new Error(dados.erro || "Erro ao consultar visitas.");
+            listaAgenda.replaceChildren();
+            if (!dados.length) { listaAgenda.textContent = "Você ainda não solicitou visitas."; return; }
+            dados.forEach(item => {
+                const linha = document.createElement("div"); linha.className = "agenda-item";
+                const titulo = document.createElement("strong"); titulo.textContent = item.imovel?.titulo || "Imóvel indisponível";
+                const descricao = document.createElement("span"); descricao.textContent = `${item.data.split("-").reverse().join("/")} às ${item.horario} • ${item.status}`;
+                linha.append(titulo, descricao);
+                if (item.status === "pendente") {
+                    const cancelar = document.createElement("button"); cancelar.className = "agenda-cancelar"; cancelar.type = "button"; cancelar.textContent = "Cancelar";
+                    cancelar.style.marginLeft = "12px";
+                    cancelar.onclick = async () => {
+                        if (!confirm("Cancelar esta solicitação?")) return;
+                        try {
+                            const r = await fetch(`${API_AGENDA}/${item._id}/cancelar`, { method: "PATCH", headers: { Authorization: `Bearer ${token()}` } });
+                            if (!r.ok) { const d = await r.json(); throw Error(d.erro || "Erro ao cancelar."); }
+                            await carregarMeusAgendamentos();
+                        } catch (erro) { alert(erro.message); }
+                    };
+                    linha.append(cancelar);
+                }
+                listaAgenda.append(linha);
+            });
+        } catch (erro) { listaAgenda.textContent = erro.message; }
+    }
+    document.getElementById("btn-meus-agendamentos").addEventListener("click", () => {
+        if (!token()) { sessionStorage.setItem("hangar_abrir_meus", "1"); location.href = LOGIN_URL; return; }
+        carregarMeusAgendamentos();
+    });
+    if (token()) {
+        carregarMeusAgendamentos();
+        if (sessionStorage.getItem("hangar_abrir_meus") === "1") {
+            sessionStorage.removeItem("hangar_abrir_meus");
+            requestAnimationFrame(() => document.getElementById("meus-agendamentos")?.scrollIntoView({ behavior: "smooth" }));
+        }
+    }
+
     let todosImoveis = [];
     let imoveisExibidos = [];
 
@@ -58,6 +166,13 @@ document.addEventListener("DOMContentLoaded", () => {
             const imoveis = await resposta.json();
 
             todosImoveis = imoveis;
+            // Após autenticar, retoma o imóvel escolhido antes do login.
+            const pendenteId = sessionStorage.getItem(PENDENTE_KEY);
+            if (pendenteId && token()) {
+                const escolhido = imoveis.find(item => String(item._id) === pendenteId);
+                sessionStorage.removeItem(PENDENTE_KEY);
+                if (escolhido) requestAnimationFrame(() => abrirAgenda(escolhido));
+            }
             imoveisExibidos = [...imoveis];
 
             renderizarImoveis(imoveis);
@@ -240,8 +355,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     </div>
 
                 </div>
+                <button type="button" class="card-agendar">Agendar visita</button>
             `;
-
+            card.querySelector(".card-agendar").addEventListener("click", event => {
+                event.stopPropagation();
+                abrirAgenda(imovel);
+            });
 
             // ==========================
             // ABRIR / FECHAR DETALHES

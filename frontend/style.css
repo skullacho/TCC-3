@@ -557,3 +557,25 @@ select option {
         grid-template-columns: 1fr;
     }
 }
+/* Agendamento integrado, mantendo a identidade visual original */
+.card-agendar { margin: 0 20px 18px; padding: 12px; background: var(--accent-red); color: white; border: 0; border-radius: 9px; font: 700 14px var(--font); cursor: pointer; }
+.card-agendar:hover,.agenda-enviar:hover { background: var(--accent-hover); }
+.agenda-overlay[hidden] { display: none !important; }
+.agenda-overlay { position: fixed; inset: 0; z-index: 4000; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,.78); padding: 16px; }
+.agenda-dialog { position: relative; width: min(100%, 460px); max-height: 90vh; overflow: auto; padding: 28px; border-radius: 16px; background: var(--card-bg); border: 1px solid var(--border-color); box-shadow: 0 20px 70px #0009; }
+.agenda-dialog h2 { margin-bottom: 8px; } #agenda-imovel { color: var(--text-muted); margin-bottom: 18px; }
+.agenda-dialog label { display: block; margin: 14px 0 8px; font-size: 14px; }
+.agenda-dialog input { width: 100%; } .agenda-fechar { position: absolute; right: 15px; top: 12px; background: transparent; border: 0; color: white; font-size: 28px; cursor: pointer; }
+.agenda-horarios { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; }
+.agenda-horarios button { background: #2d1414; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px 2px; color: white; cursor: pointer; }
+.agenda-horarios button.selecionado { background: var(--accent-red); border-color: var(--accent-red); }
+.agenda-enviar { margin-top: 16px; width: 100%; border: 0; padding: 13px; background: var(--accent-red); color: white; border-radius: 8px; cursor: pointer; font-weight: 700; }
+.agenda-enviar:disabled { opacity: .6; cursor: wait; }
+#agenda-mensagem { min-height: 18px; margin-top: 12px; font-size: 13px; }
+.meus-agendamentos { margin-top: 34px; padding: 22px; border-radius: 16px; background: var(--card-bg); border: 1px solid var(--border-color); }
+.agendamentos-topo { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+.agendamentos-topo h2 { font-size: 20px; }
+.agendamentos-topo button,.agenda-cancelar { padding: 9px 12px; background: transparent; color: white; border: 1px solid var(--accent-red); border-radius: 8px; cursor: pointer; }
+.agenda-item { border-top: 1px solid var(--border-color); padding: 12px 0; font-size: 14px; line-height: 1.7; }
+.agenda-item strong { display: block; }
+@media(max-width:600px) { .agendamentos-topo { align-items: flex-start; flex-direction: column; } .agenda-dialog { padding: 22px; } }
