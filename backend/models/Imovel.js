@@ -1,5 +1,3 @@
-const API = "https://tcc-3-nnmd.onrender.com/api/imoveis";
-
 import mongoose from "mongoose";
 
 
