@@ -19,6 +19,16 @@ document.addEventListener("DOMContentLoaded", () => {
     let imovelEscolhido = null;
     let horarioEscolhido = null;
     const modalAgenda = document.getElementById("modal-agendamento");
+    // Link de login sempre visível na janela de agendamento.
+    if (modalAgenda) {
+        const link = document.createElement("a");
+        link.textContent = "Entrar ou criar conta para agendar";
+        link.href = LOGIN_URL + "?retorno=" + encodeURIComponent(location.href.split("#")[0]);
+        link.style.cssText = "display:inline-block;margin:12px 0;color:#743737;font-weight:700;text-decoration:underline";
+        const form = modalAgenda.querySelector("form");
+        if (form) form.before(link);
+    }
+
     const formAgenda = document.getElementById("form-agendamento");
     const mensagemAgenda = document.getElementById("agenda-mensagem");
     const token = () => sessionStorage.getItem("hangar_token");
