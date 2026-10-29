@@ -375,3 +375,19 @@ main {
 
     font-size: 14px;
 }
+
+/* Agendamento: sem alterar os estilos originais dos imóveis ou rodapé */
+.agendar-visita { background: #fff; border-radius: 15px; padding: 35px; margin-top: 24px; }
+.agendar-visita h2 { margin: 0 0 10px; font-size: 26px; }
+.agendar-visita p { color: #666; line-height: 1.6; }
+#form-visita { display: grid; gap: 12px; max-width: 600px; margin-top: 24px; }
+#form-visita label { font-weight: 600; }
+#form-visita input { width: 100%; padding: 13px; border: 1px solid #ccc; border-radius: 8px; font: inherit; }
+.visita-horarios { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; }
+.visita-horarios button { padding: 13px 5px; border: 1px solid #301515; border-radius: 8px; background: #fff; color: #301515; cursor: pointer; font: inherit; }
+.visita-horarios button.selecionado { background: #301515; color: white; }
+.visita-horarios button:disabled { background: #eee; color: #888; border-color: #ddd; cursor: not-allowed; text-decoration: line-through; }
+#form-visita .visita-enviar { background: #301515; color: #fff; padding: 15px; border: 0; border-radius: 8px; font: inherit; font-weight: bold; cursor: pointer; }
+#form-visita .visita-enviar:disabled { opacity: .6; cursor: wait; }
+#visita-mensagem { min-height: 24px; margin: 0; }
+@media(max-width:700px) { .agendar-visita { padding: 20px; } .visita-horarios { grid-template-columns: repeat(2,1fr); } }
