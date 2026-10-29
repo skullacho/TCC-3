@@ -283,6 +283,7 @@ function mostrarImovel(imovel) {
         <section class="agendar-visita" aria-labelledby="visita-titulo">
             <h2 id="visita-titulo">Agende sua visita</h2>
             <p>Escolha uma data e um dos horários disponíveis para conhecer este imóvel.</p>
+            <p class="visita-login"><a id="visita-link-login" href="https://tcc-3-login.vercel.app/">Entrar ou criar conta para agendar <i class="fa-solid fa-arrow-up-right-from-square"></i></a></p>
             <form id="form-visita">
                 <label for="visita-data">Data</label>
                 <input id="visita-data" type="date" required>
@@ -371,6 +372,10 @@ carregarImovel();
 function iniciarAgendamento(imovel) {
     const API_AGENDA = "https://tcc-3-nnmd.onrender.com/api/agendamentos";
     const LOGIN_URL = "https://tcc-3-login.vercel.app/";
+    const linkLogin = document.getElementById("visita-link-login");
+    const urlLogin = new URL(LOGIN_URL);
+    urlLogin.searchParams.set("retorno", location.href.split("#")[0]);
+    linkLogin.href = urlLogin.href;
     const form = document.getElementById("form-visita");
     const dataInput = document.getElementById("visita-data");
     const mensagem = document.getElementById("visita-mensagem");
@@ -387,6 +392,7 @@ function iniciarAgendamento(imovel) {
         timeZone: "America/Sao_Paulo", year: "numeric", month: "2-digit", day: "2-digit"
     }).format(new Date());
     const hoje = diaSP();
+    if (sessionStorage.getItem("hangar_token")) linkLogin.textContent = "Trocar de conta";
     dataInput.min = hoje;
     const amanha = new Date(`${hoje}T12:00:00Z`);
     amanha.setUTCDate(amanha.getUTCDate() + 1);

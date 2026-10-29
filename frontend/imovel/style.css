@@ -391,3 +391,5 @@ main {
 #form-visita .visita-enviar:disabled { opacity: .6; cursor: wait; }
 #visita-mensagem { min-height: 24px; margin: 0; }
 @media(max-width:700px) { .agendar-visita { padding: 20px; } .visita-horarios { grid-template-columns: repeat(2,1fr); } }
+
+.visita-login {margin:12px 0 20px}.visita-login a{display:inline-flex;gap:8px;align-items:center;padding:12px 16px;border:1px solid #783b3b;border-radius:8px;color:#783b3b;font-weight:700;text-decoration:none;background:#fff}.visita-login a:hover{background:#f9eded}
