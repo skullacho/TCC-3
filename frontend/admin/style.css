@@ -1,3 +1,4 @@
+
 /* =========================================
    RESET
 ========================================= */
@@ -8,20 +9,12 @@
     box-sizing: border-box;
 }
 
-
 body {
     min-height: 100vh;
-
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-
+    font-family: Arial, Helvetica, sans-serif;
     background: #301515;
-
     color: #222;
 }
-
 
 /* =========================================
    CABEÇALHO
@@ -29,28 +22,20 @@ body {
 
 header {
     width: 100%;
-
     background: #111;
-
     color: white;
-
     padding: 28px 40px;
 }
 
-
 header h1 {
     font-size: 28px;
-
     margin-bottom: 6px;
 }
 
-
 header p {
     color: #ccc;
-
     font-size: 14px;
 }
-
 
 /* =========================================
    CONTEÚDO
@@ -58,12 +43,9 @@ header p {
 
 main {
     width: 92%;
-
     max-width: 1200px;
-
     margin: 40px auto;
 }
-
 
 /* =========================================
    PAINÉIS
@@ -71,27 +53,17 @@ main {
 
 section {
     background: #fff;
-
     border-radius: 12px;
-
     padding: 30px;
-
     margin-bottom: 30px;
-
-    box-shadow:
-        0 3px 15px
-        rgba(0, 0, 0, 0.08);
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
 }
-
 
 section h2 {
     font-size: 22px;
-
     margin-bottom: 25px;
-
     color: #222;
 }
-
 
 /* =========================================
    FORMULÁRIO
@@ -101,28 +73,19 @@ section h2 {
     width: 100%;
 }
 
-
 .campo {
     display: flex;
-
     flex-direction: column;
-
     flex: 1;
-
     margin-bottom: 18px;
 }
 
-
 .campo label {
     font-size: 14px;
-
     font-weight: 600;
-
     margin-bottom: 7px;
-
     color: #333;
 }
-
 
 /* =========================================
    LINHAS
@@ -130,12 +93,9 @@ section h2 {
 
 .linha {
     display: flex;
-
     gap: 20px;
-
     width: 100%;
 }
-
 
 /* =========================================
    INPUTS
@@ -145,60 +105,39 @@ section h2 {
 .campo select,
 .campo textarea {
     width: 100%;
-
     padding: 12px 14px;
-
     font-size: 15px;
-
     font-family: inherit;
-
     color: #222;
-
     background: white;
-
-    border:
-        1px solid #d5d5d5;
-
+    border: 1px solid #d5d5d5;
     border-radius: 7px;
-
     outline: none;
-
     transition: 0.2s;
 }
-
 
 .campo input:focus,
 .campo select:focus,
 .campo textarea:focus {
     border-color: #111;
-
-    box-shadow:
-        0 0 0 2px
-        rgba(0, 0, 0, 0.06);
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.06);
 }
-
 
 .campo input::placeholder,
 .campo textarea::placeholder {
     color: #999;
 }
 
-
 .campo textarea {
     min-height: 120px;
-
     resize: vertical;
 }
 
-
 .campo small {
     margin-top: 7px;
-
     color: #777;
-
     font-size: 12px;
 }
-
 
 /* =========================================
    MAPA
@@ -206,43 +145,27 @@ section h2 {
 
 .campo-mapa {
     margin-top: 8px;
-
     margin-bottom: 25px;
 }
 
-
 .mapa-instrucao {
     font-size: 14px;
-
     color: #555;
-
     margin-bottom: 12px;
 }
 
-
 #mapaCadastro {
     display: block;
-
     position: relative;
-
     width: 100%;
-
     height: 420px;
-
     min-height: 420px;
-
     background: #e5e5e5;
-
-    border:
-        1px solid #d5d5d5;
-
+    border: 1px solid #d5d5d5;
     border-radius: 10px;
-
     overflow: hidden;
-
     z-index: 1;
 }
-
 
 /* =========================================
    ERRO DO MAPA
@@ -250,22 +173,14 @@ section h2 {
 
 .erro-mapa {
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
     width: 100%;
-
     height: 100%;
-
     color: #c62828;
-
     font-weight: 600;
-
     background: #f5f5f5;
 }
-
 
 /* =========================================
    STATUS DA LOCALIZAÇÃO
@@ -273,66 +188,43 @@ section h2 {
 
 .localizacao-status {
     display: flex;
-
     align-items: center;
-
     gap: 8px;
-
     margin-top: 12px;
-
     padding: 11px 13px;
-
     background: #f5f5f5;
-
-    border:
-        1px solid #e3e3e3;
-
+    border: 1px solid #e3e3e3;
     border-radius: 7px;
-
     color: #555;
-
     font-size: 14px;
 }
 
-
 #textoLocalizacao.selecionada {
     color: #2e7d32;
-
     font-weight: 600;
 }
-
 
 /* =========================================
    CHECKBOX
 ========================================= */
 
 .checkbox {
-    margin:
-        10px 0 25px;
+    margin: 10px 0 25px;
 }
-
 
 .checkbox label {
     display: flex;
-
     align-items: center;
-
     gap: 9px;
-
     cursor: pointer;
-
     font-size: 14px;
 }
 
-
 .checkbox input {
     width: 17px;
-
     height: 17px;
-
     cursor: pointer;
 }
-
 
 /* =========================================
    BOTÃO CADASTRAR
@@ -340,32 +232,20 @@ section h2 {
 
 #formImovel button[type="submit"] {
     border: none;
-
     background: #111;
-
     color: white;
-
     padding: 13px 24px;
-
     border-radius: 7px;
-
     font-size: 15px;
-
     font-weight: 600;
-
     cursor: pointer;
-
     transition: 0.2s;
 }
 
-
 #formImovel button[type="submit"]:hover {
     background: #333;
-
-    transform:
-        translateY(-1px);
+    transform: translateY(-1px);
 }
-
 
 /* =========================================
    MENSAGEM
@@ -373,12 +253,9 @@ section h2 {
 
 #mensagem {
     margin-top: 18px;
-
     font-size: 14px;
-
     font-weight: 600;
 }
-
 
 /* =========================================
    LISTA
@@ -386,12 +263,9 @@ section h2 {
 
 #listaImoveis {
     display: flex;
-
     flex-direction: column;
-
     gap: 15px;
 }
-
 
 /* =========================================
    IMÓVEL
@@ -399,86 +273,79 @@ section h2 {
 
 .imovel {
     display: flex;
-
-    justify-content:
-        space-between;
-
-    align-items:
-        center;
-
+    justify-content: space-between;
+    align-items: center;
     gap: 20px;
-
     padding: 20px;
-
-    border:
-        1px solid #e0e0e0;
-
+    border: 1px solid #e0e0e0;
     border-radius: 9px;
-
     background: #fafafa;
 }
-
 
 .imovel-info {
     flex: 1;
 }
 
-
 .imovel-info h3 {
     font-size: 18px;
-
     margin-bottom: 8px;
 }
 
-
 .imovel-info p {
     margin: 4px 0;
-
     color: #666;
-
     font-size: 14px;
 }
 
-
 .localizacao-cadastrada {
     color: #2e7d32 !important;
-
     font-weight: 600;
 }
-
 
 .localizacao-nao-cadastrada {
     color: #888 !important;
 }
 
-
 /* =========================================
-   EXCLUIR
+   BOTÕES DE EDIÇÃO E EXCLUSÃO
 ========================================= */
 
-.btn-excluir {
+.acoes-imovel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.btn-editar {
     border: none;
-
-    background: #c62828;
-
+    background: #2563eb;
     color: white;
-
     padding: 10px 16px;
-
     border-radius: 6px;
-
     font-size: 14px;
-
     cursor: pointer;
-
     transition: 0.2s;
 }
 
+.btn-editar:hover {
+    background: #1d4ed8;
+}
+
+.btn-excluir {
+    border: none;
+    background: #c62828;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+}
 
 .btn-excluir:hover {
     background: #a71919;
 }
-
 
 /* =========================================
    LEAFLET
@@ -486,92 +353,363 @@ section h2 {
 
 .leaflet-container {
     width: 100%;
-
     height: 100%;
-
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
+/* =========================================
+   LOGIN ADMINISTRATIVO
+========================================= */
+
+[hidden] {
+    display: none !important;
+}
+
+.admin-login-page {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background: #301515;
+}
+
+.admin-login-box {
+    width: min(100%, 420px);
+    background: #fff;
+    border-radius: 16px;
+    padding: 36px;
+    box-shadow: 0 16px 45px #0005;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.admin-login-logo {
+    font-size: 38px;
+    color: #301515;
+    text-align: center;
+}
+
+.admin-login-box h2 {
+    text-align: center;
+    color: #301515;
+    font-size: 26px;
+}
+
+.admin-login-box > p {
+    text-align: center;
+    color: #666;
+    margin-bottom: 12px;
+}
+
+.admin-login-box label {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.admin-login-box input {
+    padding: 13px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.admin-login-box button {
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    background: #301515;
+    color: #fff;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 8px;
+}
+
+.admin-login-box #adminLoginErro {
+    color: #b42318;
+    font-size: 14px;
+    min-height: 18px;
+    margin: 0;
+}
+
+.admin-sair {
+    float: right;
+    padding: 9px 18px;
+    background: #8c3030;
+    color: #fff;
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+}
 
 /* =========================================
-   RESPONSIVO
+   SOLICITAÇÕES DE VISITAS
+========================================= */
+
+.secao-agendamentos-admin {
+    margin-top: 35px;
+}
+
+.agendamentos-cabecalho {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.agendamentos-cabecalho h2 {
+    margin: 0 0 8px;
+}
+
+.agendamentos-cabecalho p {
+    margin: 0;
+    color: #777;
+}
+
+#atualizarAgendamentos {
+    padding: 11px 18px;
+    border: 1px solid #743737;
+    border-radius: 8px;
+    background: #fff;
+    color: #743737;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+#atualizarAgendamentos:hover:not(:disabled) {
+    background: #f7eeee;
+}
+
+#atualizarAgendamentos:disabled {
+    opacity: 0.5;
+    cursor: wait;
+}
+
+/* =========================================
+   FILTRO DE STATUS
+========================================= */
+
+#filtroStatusAgendamento {
+    padding: 10px 14px;
+    margin: 0 0 16px 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #fff;
+    font: inherit;
+}
+
+#mensagemAgendamentos {
+    margin: 12px 0;
+    color: #555;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+/* =========================================
+   LISTA DE AGENDAMENTOS
+========================================= */
+
+#listaAgendamentosAdmin {
+    display: grid;
+    gap: 18px;
+}
+
+.agendamento-admin-card {
+    background: #fff;
+    border: 1px solid #e2e2e2;
+    border-radius: 12px;
+    padding: 22px;
+}
+
+.agendamento-admin-topo {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.agendamento-admin-topo h3 {
+    margin: 0;
+    font-size: 20px;
+    color: #301515;
+}
+
+/* =========================================
+   STATUS
+========================================= */
+
+.agendamento-status {
+    display: inline-block;
+    padding: 7px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.status-pendente {
+    background: #fff4d6;
+    color: #8a6000;
+}
+
+.status-confirmado {
+    background: #e4f6e8;
+    color: #23753a;
+}
+
+.status-recusado {
+    background: #fde8e8;
+    color: #aa2626;
+}
+
+.status-cancelado {
+    background: #ededed;
+    color: #666;
+}
+
+/* =========================================
+   INFORMAÇÕES DO AGENDAMENTO
+========================================= */
+
+.agendamento-admin-informacoes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 20px;
+}
+
+.agendamento-informacao {
+    margin: 0;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.agendamento-informacao strong {
+    color: #333;
+}
+
+/* =========================================
+   ACEITAR OU REJEITAR
+========================================= */
+
+.agendamento-admin-acoes {
+    display: flex;
+    gap: 12px;
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid #eee;
+}
+
+.agendamento-admin-acoes button {
+    padding: 11px 18px;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.agendamento-admin-acoes button:disabled {
+    opacity: 0.5;
+    cursor: wait;
+}
+
+.btn-aceitar-visita {
+    background: #277a3d;
+}
+
+.btn-aceitar-visita:hover:not(:disabled) {
+    background: #1e6030;
+}
+
+.btn-rejeitar-visita {
+    background: #b12c2c;
+}
+
+.btn-rejeitar-visita:hover:not(:disabled) {
+    background: #8c2222;
+}
+
+.agendamentos-vazio {
+    padding: 25px;
+    text-align: center;
+    color: #777;
+}
+
+/* =========================================
+   RESPONSIVIDADE
 ========================================= */
 
 @media (max-width: 768px) {
-
     header {
-        padding:
-            22px 20px;
+        padding: 22px 20px;
     }
-
 
     header h1 {
         font-size: 23px;
     }
 
-
     main {
         width: 94%;
-
-        margin:
-            25px auto;
+        margin: 25px auto;
     }
-
 
     section {
         padding: 20px;
     }
 
-
     .linha {
         flex-direction: column;
-
         gap: 0;
     }
 
-
     #mapaCadastro {
         height: 320px;
-
         min-height: 320px;
     }
 
-
     .imovel {
         flex-direction: column;
-
-        align-items:
-            flex-start;
+        align-items: flex-start;
     }
 
+    .acoes-imovel {
+        width: 100%;
+    }
+
+    .acoes-imovel .btn-editar,
+    .acoes-imovel .btn-excluir {
+        flex: 1;
+    }
 
     .btn-excluir {
         width: 100%;
     }
-
 }
-/* Login administrativo — isolado do visual do painel */
-[hidden] { display: none !important; }
-.admin-login-page { min-height: 100vh; display: grid; place-items: center; padding: 24px; background: #301515; }
-.admin-login-box { width: min(100%, 420px); background: #fff; border-radius: 16px; padding: 36px; box-shadow: 0 16px 45px #0005; display: flex; flex-direction: column; gap: 12px; }
-.admin-login-logo { font-size: 38px; color: #301515; text-align: center; }
-.admin-login-box h2 { text-align: center; color: #301515; font-size: 26px; }
-.admin-login-box > p { text-align: center; color: #666; margin-bottom: 12px; }
-.admin-login-box label { font-weight: bold; font-size: 14px; }
-.admin-login-box input { padding: 13px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; }
-.admin-login-box button { padding: 14px; border: none; border-radius: 8px; background: #301515; color: #fff; cursor: pointer; font-weight: bold; margin-top: 8px; }
-.admin-login-box #adminLoginErro { color: #b42318; font-size: 14px; min-height: 18px; margin: 0; }
-.admin-sair { float: right; padding: 9px 18px; background: #8c3030; color: #fff; border: 0; border-radius: 8px; cursor: pointer; }
 
+@media (max-width: 700px) {
+    .agendamento-admin-card {
+        padding: 16px;
+    }
 
-/* Botão editar: estilos adicionados sem alterar os anteriores */
-.acoes-imovel { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.btn-editar { border: none; background: #2563eb; color: white; padding: 10px 16px; border-radius: 6px; font-size: 14px; cursor: pointer; transition: 0.2s; }
-.btn-editar:hover { background: #1d4ed8; }
-@media (max-width: 768px) {
-    .acoes-imovel { width: 100%; }
-    .acoes-imovel .btn-editar, .acoes-imovel .btn-excluir { flex: 1; }
+    .agendamento-admin-informacoes {
+        grid-template-columns: 1fr;
+    }
+
+    .agendamento-admin-acoes {
+        flex-direction: column;
+    }
+
+    .agendamento-admin-acoes button,
+    #atualizarAgendamentos {
+        width: 100%;
+    }
+
+    #filtroStatusAgendamento {
+        width: 100%;
+        margin: 10px 0 16px;
+    }
 }
