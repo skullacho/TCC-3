@@ -10,7 +10,7 @@ import Agendamento from "../models/Agendamento.js";
 const router = Router();
 
 // ========================================
-// AUTENTICAÇÃO ADMINISTRATIVA
+// VERIFICAR SENHA DO ADMINISTRADOR
 // ========================================
 
 function conferirSenha(senha, hashConfigurado) {
@@ -35,6 +35,11 @@ function conferirSenha(senha, hashConfigurado) {
         Buffer.from(partes[1], "hex")
     );
 }
+
+// ========================================
+// LOGIN ADMINISTRATIVO
+// POST /api/admin/login
+// ========================================
 
 router.post("/login", (req, res) => {
     const { usuario, senha } = req.body || {};
@@ -73,7 +78,9 @@ router.post("/login", (req, res) => {
     }
 
     const token = jwt.sign(
-        { role: "admin" },
+        {
+            role: "admin"
+        },
         process.env.JWT_SECRET,
         {
             expiresIn: "2h",
@@ -85,60 +92,90 @@ router.post("/login", (req, res) => {
     return res.json({ token });
 });
 
-router.get("/verificar", exigirAdmin, (_req, res) => {
-    res.json({ autenticado: true });
-});
-
 // ========================================
-// LISTAR AGENDAMENTOS
+// VERIFICAR AUTENTICAÇÃO
+// GET /api/admin/verificar
 // ========================================
 
-router.get("/agendamentos", exigirAdmin, async (req, res) => {
-    try {
-        const agendamentos = await Agendamento.find()
-            .populate("usuario", "nome email")
-            .populate("imovel", "titulo cidade bairro")
-            .sort({
-                createdAt: -1
-            })
-            .lean();
-
-        return res.json(agendamentos);
-
-    } catch (erro) {
-        console.error("Erro ao listar agendamentos:", erro);
-
-        return res.status(500).json({
-            erro: "Não foi possível carregar os agendamentos."
+router.get(
+    "/verificar",
+    exigirAdmin,
+    (_req, res) => {
+        return res.json({
+            autenticado: true
         });
     }
-});
+);
+
+// ========================================
+// LISTAR TODOS OS AGENDAMENTOS
+// GET /api/admin/agendamentos
+// ========================================
+
+router.get(
+    "/agendamentos",
+    exigirAdmin,
+    async (_req, res) => {
+        try {
+            const agendamentos = await Agendamento.find()
+                .populate(
+                    "usuario",
+                    "nome email"
+                )
+                .populate(
+                    "imovel",
+                    "titulo cidade bairro"
+                )
+                .sort({
+                    createdAt: -1
+                })
+                .lean();
+
+            return res.json(agendamentos);
+
+        } catch (erro) {
+            console.error(
+                "Erro ao consultar agendamentos:",
+                erro
+            );
+
+            return res.status(500).json({
+                erro: "Não foi possível carregar os agendamentos."
+            });
+        }
+    }
+);
 
 // ========================================
 // ACEITAR OU REJEITAR AGENDAMENTO
+// PATCH /api/admin/agendamentos/:id/status
 // ========================================
 
 router.patch(
     "/agendamentos/:id/status",
     exigirAdmin,
     async (req, res) => {
+        const { id } = req.params;
+        const { status } = req.body || {};
+
+        // Verifica se o ID é válido
+        if (!mongoose.isValidObjectId(id)) {
+            return res.status(400).json({
+                erro: "Agendamento inválido."
+            });
+        }
+
+        // Somente permite aceitar ou rejeitar
+        if (
+            !["confirmado", "recusado"].includes(status)
+        ) {
+            return res.status(400).json({
+                erro: "Status inválido."
+            });
+        }
+
         try {
-            const { id } = req.params;
-            const { status } = req.body || {};
-
-            if (!mongoose.isValidObjectId(id)) {
-                return res.status(400).json({
-                    erro: "Identificador inválido."
-                });
-            }
-
-            if (!["confirmado", "recusado"].includes(status)) {
-                return res.status(400).json({
-                    erro: "Status inválido."
-                });
-            }
-
-            // Só é possível responder a uma solicitação pendente.
+            // Só permite alterar visitas pendentes
             const agendamento =
                 await Agendamento.findOneAndUpdate(
                     {
@@ -146,26 +183,37 @@ router.patch(
                         status: "pendente"
                     },
                     {
-                        $set: { status }
+                        $set: {
+                            status
+                        }
                     },
                     {
                         new: true,
                         runValidators: true
                     }
                 )
-                    .populate("usuario", "nome email")
-                    .populate("imovel", "titulo cidade bairro");
+                .populate(
+                    "usuario",
+                    "nome email"
+                )
+                .populate(
+                    "imovel",
+                    "titulo cidade bairro"
+                );
 
             if (!agendamento) {
                 return res.status(409).json({
-                    erro: "Essa solicitação não está mais pendente. Atualize a lista."
+                    erro: "A solicitação não está mais pendente. Atualize a lista."
                 });
             }
 
+            const mensagem =
+                status === "confirmado"
+                    ? "Visita confirmada."
+                    : "Visita recusada.";
+
             return res.json({
-                mensagem: status === "confirmado"
-                    ? "Visita confirmada com sucesso!"
-                    : "Solicitação de visita recusada.",
+                mensagem,
                 agendamento
             });
 
@@ -176,7 +224,7 @@ router.patch(
             );
 
             return res.status(500).json({
-                erro: "Não foi possível atualizar a solicitação."
+                erro: "Não foi possível atualizar a visita."
             });
         }
     }
