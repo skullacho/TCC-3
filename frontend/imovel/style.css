@@ -1,471 +1,831 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&display=swap');
+
+/* ========================================
+   CORES DA HANGAR PRIME
+======================================== */
+
+:root {
+    --vinho: #301515;
+    --vinho-escuro: #220e0e;
+    --vinho-card: #452626;
+    --vinho-claro: #6b4545;
+    --vinho-hover: #784c4c;
+
+    --bege: #f0e5dc;
+    --texto: #f7f0ec;
+    --texto-secundario: #cbb8b4;
+
+    --borda: rgba(255, 255, 255, 0.12);
+    --sombra: 0 12px 35px rgba(0, 0, 0, 0.16);
+}
+
+/* ========================================
+   RESET
+======================================== */
+
 * {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
-    margin: 0;
-
-    font-family: Arial, sans-serif;
-
-    background: #301515;
-
-    color: #222;
+    font-family: 'Google Sans', Arial, sans-serif;
+    background: var(--vinho);
+    color: var(--texto);
+    min-height: 100vh;
 }
 
-
-header {
-    background: #301515;
-
-    padding: 20px 5%;
-
-    border-bottom: 1px solid #ddd;
+button,
+input,
+select,
+textarea {
+    font: inherit;
 }
 
+button {
+    cursor: pointer;
+}
 
-header a {
+a {
+    text-decoration: none;
+}
+
+/* ========================================
+   HEADER
+======================================== */
+
+body > header {
+    position: fixed;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: 95%;
+    max-width: 1200px;
+    height: 70px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 25px;
+
+    background: rgba(30, 10, 10, 0.94);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    border: 1px solid var(--borda);
+    border-radius: 12px;
+
+    box-shadow: var(--sombra);
+    z-index: 2000;
+}
+
+body > header a {
     color: #fff;
+}
 
+#logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #fff;
     text-decoration: none;
 
-    font-weight: bold;
+    transition: transform 0.2s;
 }
 
-
-main {
-    max-width: 1200px;
-
-    margin: 40px auto;
-
-    padding: 0 20px;
+#logo-container:hover {
+    transform: scale(1.06);
 }
 
+#nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 25px;
+}
+
+body > header .header-link-nav {
+    color: #fff;
+    font-size: 15px;
+    font-weight: 500;
+
+    transition: color 0.2s;
+}
+
+body > header .header-link-nav:hover,
+body > header .header-link-nav.active {
+    color: var(--bege);
+}
+
+#links-container {
+    display: flex;
+    align-items: center;
+}
+
+#header-menu {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+
+    padding: 6px;
+    cursor: pointer;
+}
+
+.hmenu-bars {
+    width: 24px;
+    height: 2px;
+    margin: 3px 0;
+
+    background: #fff;
+}
+
+/* ========================================
+   CONTEÚDO PRINCIPAL
+======================================== */
+
+main,
+main#imovel {
+    width: min(94%, 1180px);
+    max-width: 1180px;
+
+    margin: 120px auto 80px;
+    padding: 0;
+}
+
+/* ========================================
+   GALERIA DE FOTOS
+======================================== */
 
 .galeria {
     width: 100%;
-
-    height: 500px;
+    height: clamp(300px, 46vw, 550px);
 
     overflow: hidden;
 
-    border-radius: 15px;
+    background: var(--vinho-escuro);
 
-    background: #ddd;
+    border: 1px solid var(--borda);
+    border-radius: 18px;
+
+    box-shadow: var(--sombra);
 }
 
-
 .galeria img {
+    display: block;
     width: 100%;
-
     height: 100%;
 
     object-fit: cover;
 }
 
+/* ========================================
+   INFORMAÇÕES DO IMÓVEL
+======================================== */
 
 .informacoes {
-    background: white;
-
     margin-top: 25px;
+    padding: clamp(25px, 4vw, 45px);
 
-    padding: 35px;
+    background: var(--vinho-card);
 
-    border-radius: 15px;
+    border: 1px solid var(--borda);
+    border-radius: 18px;
+
+    box-shadow: var(--sombra);
 }
-
 
 .informacoes h1 {
-    font-size: 35px;
+    margin: 8px 0 18px;
 
-    margin: 10px 0;
+    color: #fff;
+    font-size: clamp(28px, 3.5vw, 42px);
+    font-weight: 700;
+
+    line-height: 1.2;
+    letter-spacing: -0.03em;
 }
 
+.informacoes h2 {
+    margin: 30px 0 15px;
+
+    color: var(--bege);
+    font-size: 23px;
+    font-weight: 600;
+}
+
+.informacoes p {
+    color: var(--texto-secundario);
+    line-height: 1.8;
+}
+
+.informacoes > p:first-child {
+    display: inline-block;
+
+    margin-bottom: 12px;
+    padding: 7px 14px;
+
+    background: rgba(255, 255, 255, 0.09);
+
+    border: 1px solid var(--borda);
+    border-radius: 30px;
+
+    color: var(--bege);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* ========================================
+   PREÇO
+======================================== */
 
 .preco {
-    font-size: 28px;
+    margin: 12px 0;
 
-    font-weight: bold;
+    color: var(--bege) !important;
+    font-size: clamp(28px, 3vw, 37px);
+    font-weight: 700;
+
+    letter-spacing: -0.025em;
 }
 
+/* ========================================
+   LOCALIZAÇÃO
+======================================== */
 
 .localizacao {
-    color: #666;
+    margin-bottom: 25px;
 
-    font-size: 18px;
+    color: var(--texto-secundario);
+    font-size: 16px;
 }
 
+/* ========================================
+   DETALHES DO IMÓVEL
+======================================== */
 
 .detalhes {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
 
-    gap: 40px;
+    gap: 14px;
 
-    border-top: 1px solid #ddd;
-
-    border-bottom: 1px solid #ddd;
-
+    margin: 30px 0;
     padding: 25px 0;
 
-    margin: 25px 0;
+    border-top: 1px solid var(--borda);
+    border-bottom: 1px solid var(--borda);
 }
-
 
 .detalhe {
     display: flex;
-
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
 
-    gap: 5px;
+    gap: 8px;
+
+    min-height: 105px;
+    padding: 20px 12px;
+
+    text-align: center;
+
+    background: rgba(255, 255, 255, 0.055);
+
+    border: 1px solid var(--borda);
+    border-radius: 12px;
+
+    transition: background 0.2s;
 }
 
+.detalhe:hover {
+    background: rgba(255, 255, 255, 0.09);
+}
 
 .detalhe strong {
-    font-size: 22px;
+    color: var(--bege);
+    font-size: 25px;
+    font-weight: 700;
 }
 
+.detalhe span {
+    color: var(--texto-secundario);
+    font-size: 13px;
+}
+
+/* ========================================
+   CARACTERÍSTICAS
+======================================== */
 
 .caracteristicas {
     display: flex;
-
     flex-wrap: wrap;
 
     gap: 10px;
 }
 
-
 .caracteristica {
-    background: #f1f1f1;
+    padding: 11px 16px;
 
-    padding: 10px 15px;
+    background: rgba(255, 255, 255, 0.07);
 
-    border-radius: 8px;
+    border: 1px solid var(--borda);
+    border-radius: 9px;
+
+    color: var(--bege);
+    font-size: 14px;
 }
 
-
-/* =========================================
-   LOCALIZAÇÃO / MAPA
-========================================= */
+/* ========================================
+   LOCALIZAÇÃO E MAPA
+======================================== */
 
 .secao-localizacao {
-    margin-top: 35px;
+    margin-top: 38px;
+    padding-top: 25px;
 
-    padding-top: 10px;
+    border-top: 1px solid var(--borda);
 }
-
 
 .secao-localizacao h2 {
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 }
-
 
 .endereco-imovel {
-    color: #666;
+    margin-bottom: 18px;
 
+    color: var(--texto-secundario);
     font-size: 16px;
-
-    margin-top: 0;
-
-    margin-bottom: 15px;
+    line-height: 1.6;
 }
-
 
 .endereco-imovel i {
-    color: #301515;
-
-    margin-right: 5px;
+    margin-right: 6px;
+    color: var(--bege);
 }
-
 
 #mapaImovel {
     width: 100%;
+    height: 370px;
 
-    height: 400px;
-
-    margin-top: 15px;
-
-    border-radius: 12px;
-
-    border: 1px solid #ddd;
+    margin-top: 18px;
 
     overflow: hidden;
-}
 
+    background: #ded8d2;
+
+    border: 1px solid var(--borda);
+    border-radius: 14px;
+}
 
 .sem-mapa {
-    color: #777;
+    padding: 18px;
 
-    background: #f5f5f5;
+    background: rgba(255, 255, 255, 0.07);
 
-    padding: 15px;
+    border: 1px solid var(--borda);
+    border-radius: 10px;
 
-    border-radius: 8px;
+    color: var(--texto-secundario);
 }
 
+/* ========================================
+   AGENDAMENTO DE VISITAS
+======================================== */
 
-@media (max-width: 700px) {
+.agendar-visita {
+    margin-top: 25px;
+    padding: clamp(25px, 4vw, 45px);
 
-    .galeria {
-        height: 300px;
-    }
+    background: var(--vinho-card);
 
+    border: 1px solid var(--borda);
+    border-radius: 18px;
 
-    .detalhes {
-        flex-wrap: wrap;
-
-        gap: 20px;
-    }
-
-
-    .informacoes {
-        padding: 20px;
-    }
-
-
-    #mapaImovel {
-        height: 300px;
-    }
+    box-shadow: var(--sombra);
 }
 
+.agendar-visita h2 {
+    margin: 0 0 12px;
 
-/* =========================================
-   FOOTER
-========================================= */
+    color: var(--bege);
+    font-size: clamp(24px, 3vw, 30px);
+    font-weight: 700;
+}
 
-.footer {
-    background: #050505;
+.agendar-visita p {
+    color: var(--texto-secundario);
+    line-height: 1.7;
+}
 
-    color: #fff;
+/* ========================================
+   FORMULÁRIO DE VISITAS
+======================================== */
 
-    padding-top: 60px;
+#form-visita {
+    display: grid;
+    gap: 15px;
 
     width: 100%;
+    max-width: 680px;
 
-    border-top:
-        1px solid rgba(255,255,255,0.08);
+    margin-top: 25px;
 }
 
+#form-visita label {
+    color: var(--bege);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+#form-visita input {
+    width: 100%;
+    min-height: 49px;
+
+    padding: 13px 15px;
+
+    background: #f2eae5;
+    color: #301515;
+
+    border: 1px solid #cbbab5;
+    border-radius: 9px;
+
+    outline: none;
+
+    transition: border-color 0.2s;
+}
+
+#form-visita input:focus {
+    border-color: #a87979;
+    box-shadow: 0 0 0 3px rgba(240, 229, 220, 0.15);
+}
+
+#form-visita input::placeholder {
+    color: #8a7975;
+}
+
+/* ========================================
+   HORÁRIOS DISPONÍVEIS
+======================================== */
+
+.visita-horarios {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+
+    gap: 12px;
+}
+
+.visita-horarios button {
+    min-height: 49px;
+    padding: 12px 8px;
+
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--bege);
+
+    border: 1px solid rgba(240, 229, 220, 0.35);
+    border-radius: 9px;
+
+    font-weight: 600;
+
+    transition:
+        background 0.2s,
+        border-color 0.2s,
+        color 0.2s;
+}
+
+.visita-horarios button:hover:not(:disabled) {
+    background: var(--vinho-claro);
+    border-color: var(--bege);
+}
+
+.visita-horarios button.selecionado,
+.visita-horarios button.selecionado:hover {
+    background: var(--bege);
+    color: var(--vinho-escuro);
+
+    border-color: var(--bege);
+
+    text-decoration: none;
+}
+
+.visita-horarios button:disabled {
+    background: rgba(0, 0, 0, 0.15);
+    color: #a38d89;
+
+    border-color: rgba(255, 255, 255, 0.1);
+
+    cursor: not-allowed;
+}
+
+.visita-horarios button.ocupado {
+    text-decoration: line-through;
+}
+
+.visita-horarios button:disabled:not(.ocupado) {
+    text-decoration: none;
+}
+
+/* ========================================
+   BOTÃO DE CONFIRMAR VISITA
+======================================== */
+
+#form-visita .visita-enviar {
+    min-height: 52px;
+    padding: 14px 20px;
+
+    background: var(--bege);
+    color: var(--vinho-escuro);
+
+    border: none;
+    border-radius: 9px;
+
+    font-size: 15px;
+    font-weight: 700;
+
+    transition:
+        background 0.2s,
+        transform 0.2s;
+}
+
+#form-visita .visita-enviar:hover:not(:disabled) {
+    background: #fff5ee;
+    transform: translateY(-1px);
+}
+
+#form-visita .visita-enviar:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#visita-mensagem {
+    min-height: 24px;
+    margin: 0;
+
+    color: var(--bege);
+    font-size: 14px;
+}
+
+/* ========================================
+   LOGIN PARA AGENDAR
+======================================== */
+
+.visita-login {
+    margin: 15px 0 20px;
+}
+
+.visita-login a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    padding: 13px 18px;
+
+    background: var(--bege);
+    color: var(--vinho-escuro);
+
+    border: 1px solid var(--bege);
+    border-radius: 9px;
+
+    font-weight: 700;
+
+    transition: background 0.2s;
+}
+
+.visita-login a:hover {
+    background: #fff5ee;
+}
+
+/* ========================================
+   FOOTER
+======================================== */
+
+.footer {
+    width: 100%;
+    padding-top: 60px;
+
+    background: #050505;
+    color: #fff;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
 
 .footer-container {
     width: 90%;
-
     max-width: 1200px;
 
     margin: auto;
 
     display: grid;
-
-    grid-template-columns:
-        repeat(
-            auto-fit,
-            minmax(220px, 1fr)
-        );
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(220px, 1fr)
+    );
 
     gap: 40px;
 }
 
-
 .footer h2 {
-    font-size: 24px;
-
     margin-bottom: 15px;
 
-    color: #ffffff;
+    color: #fff;
+    font-size: 24px;
 }
-
 
 .footer h3 {
-    font-size: 18px;
-
     margin-bottom: 15px;
 
-    color: #ffffff;
+    color: #fff;
+    font-size: 18px;
 }
-
 
 .footer p,
 .footer a {
     color: #bdbdbd;
-
     font-size: 14px;
-
     line-height: 1.8;
 }
 
-
 .footer a {
-    text-decoration: none;
-
-    transition: 0.3s ease;
+    transition: color 0.2s;
 }
-
 
 .footer a:hover {
-    color: #ffffff;
+    color: #fff;
 }
-
 
 .footer-links ul {
     list-style: none;
-
     padding: 0;
 }
-
 
 .footer-links li {
     margin-bottom: 10px;
 }
 
-
 .social-icons {
     display: flex;
-
     gap: 12px;
 
     margin-top: 15px;
 }
 
-
 .social-icons a {
-    width: 40px;
-
-    height: 40px;
-
     display: flex;
-
     align-items: center;
-
     justify-content: center;
 
-    background:
-        rgba(255,255,255,0.08);
+    width: 40px;
+    height: 40px;
+
+    background: rgba(255, 255, 255, 0.08);
 
     border-radius: 50%;
 
     font-size: 16px;
 
-    transition: 0.3s ease;
+    transition:
+        background 0.2s,
+        transform 0.2s;
 }
-
 
 .social-icons a:hover {
-    background: #ffffff;
+    background: var(--bege);
+    color: #301515;
 
-    color: #000;
-
-    transform:
-        translateY(-4px);
+    transform: translateY(-3px);
 }
-
 
 .footer-bottom {
     margin-top: 50px;
-
-    border-top:
-        1px solid rgba(255,255,255,0.08);
+    padding: 20px 10px;
 
     background: #030303;
 
-    padding: 20px 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
 
     text-align: center;
 }
 
-
 .footer-bottom p {
     color: #a8a8a8;
-
     font-size: 14px;
 }
 
-/* Agendamento: sem alterar os estilos originais dos imóveis ou rodapé */
-.agendar-visita { background: #fff; border-radius: 15px; padding: 35px; margin-top: 24px; }
-.agendar-visita h2 { margin: 0 0 10px; font-size: 26px; }
-.agendar-visita p { color: #666; line-height: 1.6; }
-#form-visita { display: grid; gap: 12px; max-width: 600px; margin-top: 24px; }
-#form-visita label { font-weight: 600; }
-#form-visita input { width: 100%; padding: 13px; border: 1px solid #ccc; border-radius: 8px; font: inherit; }
-.visita-horarios { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; }
-.visita-horarios button { padding: 13px 5px; border: 1px solid #301515; border-radius: 8px; background: #fff; color: #301515; cursor: pointer; font: inherit; }
-.visita-horarios button.selecionado { background: #301515; color: white; }
-.visita-horarios button:disabled { background: #eee; color: #888; border-color: #ddd; cursor: not-allowed; text-decoration: line-through; }
-#form-visita .visita-enviar { background: #301515; color: #fff; padding: 15px; border: 0; border-radius: 8px; font: inherit; font-weight: bold; cursor: pointer; }
-#form-visita .visita-enviar:disabled { opacity: .6; cursor: wait; }
-#visita-mensagem { min-height: 24px; margin: 0; }
-@media(max-width:700px) { .agendar-visita { padding: 20px; } .visita-horarios { grid-template-columns: repeat(2,1fr); } }
+/* ========================================
+   RESPONSIVIDADE
+======================================== */
 
-.visita-login {margin:12px 0 20px}.visita-login a{display:inline-flex;gap:8px;align-items:center;padding:12px 16px;border:1px solid #783b3b;border-radius:8px;color:#783b3b;font-weight:700;text-decoration:none;background:#fff}.visita-login a:hover{background:#f9eded}
-
-
-/* ============================================================
-   REDESIGN MINIMALISTA — HANGAR PRIME
-   Mantém seletores e comportamentos usados por imovel/script.js
-   ============================================================ */
-
-:root { --vinho: #301515; --vinho-profundo: #1e0a0a; --vinho-borda: #e9dddd; --fundo-claro: #f8f6f5; }
-html { scroll-behavior: smooth; }
-body { font-family: 'Google Sans', Arial, sans-serif; background: #f7f5f4; color: #242020; }
-/* Mesmo cabeçalho da listagem */
-body > header { position: fixed; top: 15px; left: 50%; transform: translateX(-50%); width: 95%; max-width: 1200px; height: 70px; display: flex; justify-content: space-between; align-items: center; padding: 0 25px; background: rgba(30,10,10,.88); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,.15); border-radius: 12px; z-index: 2000; box-shadow: 0 12px 35px rgba(0,0,0,.13); }
-#logo-container { display: flex; align-items: center; justify-content: center; text-decoration: none; transition: transform .2s; }
-#logo-container:hover { transform: scale(1.08); }
-#nav-container { display: flex; align-items: center; justify-content: center; gap: 25px; }
-body > header .header-link-nav { color: #fff; text-decoration: none; font-size: 15px; font-weight: 500; transition: opacity .2s; }
-body > header .header-link-nav:hover, body > header .header-link-nav.active { opacity: .7; }
-#links-container { display: flex; align-items: center; }
-#header-menu { display: none; flex-direction: column; justify-content: center; cursor: pointer; padding: 6px; }
-.hmenu-bars { width: 24px; height: 2px; background: #fff; margin: 3px 0; }
-/* Layout arejado e galeria ampla */
-main#imovel { width: min(94%, 1180px); max-width: 1180px; padding: 0; margin: 120px auto 78px; }
-main#imovel .galeria { height: clamp(300px, 46vw, 550px); border-radius: 20px; background: #e9e5e3; box-shadow: 0 16px 45px rgba(37,18,18,.11); }
-main#imovel .galeria img { display: block; width: 100%; height: 100%; object-fit: cover; }
-main#imovel .informacoes { margin-top: 24px; padding: clamp(24px, 4vw, 48px); border: 1px solid #eee7e5; border-radius: 20px; background: #fff; box-shadow: 0 12px 36px rgba(37,18,18,.04); }
-main#imovel .informacoes > p:first-child { display: inline-block; padding: 7px 13px; background: #f5eeee; color: #6a3434; border-radius: 50px; font-size: 13px; font-weight: 700; margin: 0 0 12px; }
-main#imovel .informacoes h1 { color: #241818; font-size: clamp(27px, 3.5vw, 42px); line-height: 1.16; letter-spacing: -.035em; margin: 4px 0 15px; }
-main#imovel .preco { color: var(--vinho); font-size: clamp(27px, 3vw, 36px); font-weight: 700; letter-spacing: -.025em; margin-bottom: 12px; }
-main#imovel .localizacao { color: #777071; font-size: 16px; margin: 0 0 24px; }
-main#imovel .detalhes { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 12px; border: 0; margin: 28px 0 36px; padding: 0; }
-main#imovel .detalhe { align-items: center; justify-content: center; text-align: center; gap: 7px; min-height: 102px; padding: 18px 12px; border-radius: 12px; background: var(--fundo-claro); border: 1px solid #efe9e7; }
-main#imovel .detalhe strong { color: #342020; font-size: 24px; }
-main#imovel .detalhe span { color: #71696a; font-size: 13px; }
-main#imovel .informacoes h2 { color: #291c1c; font-size: 23px; margin: 28px 0 13px; letter-spacing: -.02em; }
-main#imovel .informacoes > p:not(.localizacao) { line-height: 1.8; }
-main#imovel .caracteristicas { gap: 10px; }
-main#imovel .caracteristica { background: #f8f4f3; border: 1px solid #eee3e0; border-radius: 9px; color: #5b3939; font-size: 14px; padding: 11px 15px; }
-main#imovel .secao-localizacao { margin-top: 36px; padding-top: 24px; border-top: 1px solid #eee8e6; }
-main#imovel .endereco-imovel { line-height: 1.6; }
-main#imovel #mapaImovel { height: 370px; border-radius: 14px; border: 1px solid #e7e0de; margin-top: 18px; }
-/* Agendamento — mantém os IDs e as classes de estado */
-main#imovel .agendar-visita { background: #fff; border: 1px solid #eee7e5; border-radius: 20px; padding: clamp(24px, 4vw, 44px); margin-top: 24px; box-shadow: 0 12px 36px rgba(37,18,18,.04); }
-main#imovel .agendar-visita h2 { font-size: clamp(24px, 3vw, 30px); color: #291c1c; letter-spacing: -.03em; }
-main#imovel .agendar-visita > p { color: #777071; }
-main#imovel #form-visita { max-width: 680px; gap: 14px; margin-top: 24px; }
-main#imovel #form-visita label { font-size: 14px; color: #382b2b; }
-main#imovel #form-visita input { min-height: 48px; background: #fbfafa; border: 1px solid #ddd3d1; border-radius: 10px; color: #292020; }
-main#imovel #form-visita input:focus { outline: 2px solid #a17c7c; outline-offset: 1px; }
-main#imovel .visita-horarios { gap: 12px; }
-main#imovel .visita-horarios button { border-radius: 10px; min-height: 48px; font-weight: 600; transition: background .2s, border-color .2s; }
-main#imovel .visita-horarios button:hover:not(:disabled):not(.selecionado) { background: #f8eeee; }
-main#imovel .visita-horarios button.selecionado { background: var(--vinho); color: #fff; border-color: var(--vinho); text-decoration: none; }
-main#imovel .visita-horarios button:disabled { background: #f0eeee; color: #a8a2a2; border-color: #e8e4e4; text-decoration: line-through; }
-main#imovel .visita-enviar { min-height: 52px; border-radius: 10px; transition: background .2s; }
-main#imovel .visita-enviar:hover:not(:disabled) { background: #4d2727; }
-main#imovel .visita-login a { border-radius: 10px; }
-/* Rodapé existente preservado */
 @media (max-width: 760px) {
-  body > header { top: 10px; width: 94%; height: 62px; padding: 0 18px; }
-  #header-menu { display: flex; }
-  #nav-container { display: none; position: absolute; top: calc(100% + 8px); right: 0; left: 0; flex-direction: column; align-items: stretch; gap: 0; padding: 10px; background: #2a1111; border: 1px solid rgba(255,255,255,.16); border-radius: 12px; box-shadow: 0 15px 30px rgba(0,0,0,.18); }
-  #nav-container.active { display: flex; }
-  #nav-container .header-link-nav { padding: 13px 15px; }
-  main#imovel { margin-top: 92px; margin-bottom: 50px; }
-  main#imovel .galeria { height: 300px; border-radius: 15px; }
-  main#imovel .informacoes, main#imovel .agendar-visita { border-radius: 15px; padding: 22px; }
-  main#imovel .detalhes { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
-  main#imovel .detalhe { min-height: 85px; }
-  main#imovel #mapaImovel { height: 290px; }
-  main#imovel .visita-horarios { grid-template-columns: repeat(2,minmax(0,1fr)); }
+
+    body > header {
+        top: 10px;
+
+        width: 94%;
+        height: 62px;
+
+        padding: 0 18px;
+    }
+
+    #header-menu {
+        display: flex;
+    }
+
+    #nav-container {
+        display: none;
+
+        position: absolute;
+        top: calc(100% + 8px);
+        left: 0;
+        right: 0;
+
+        flex-direction: column;
+        align-items: stretch;
+
+        gap: 0;
+        padding: 10px;
+
+        background: var(--vinho-escuro);
+
+        border: 1px solid var(--borda);
+        border-radius: 12px;
+
+        box-shadow: var(--sombra);
+    }
+
+    #nav-container.active {
+        display: flex;
+    }
+
+    #nav-container .header-link-nav {
+        padding: 13px 15px;
+    }
+
+    main,
+    main#imovel {
+        width: 94%;
+        margin-top: 95px;
+        margin-bottom: 50px;
+    }
+
+    .galeria {
+        height: 300px;
+        border-radius: 14px;
+    }
+
+    .informacoes,
+    .agendar-visita {
+        padding: 22px;
+        border-radius: 14px;
+    }
+
+    .detalhes {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .detalhe {
+        min-height: 90px;
+    }
+
+    #mapaImovel {
+        height: 290px;
+    }
+
+    .visita-horarios {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
+
 @media (max-width: 420px) {
-  main#imovel .galeria { height: 245px; }
-  main#imovel .informacoes, main#imovel .agendar-visita { padding: 18px; }
+
+    .galeria {
+        height: 245px;
+    }
+
+    .informacoes,
+    .agendar-visita {
+        padding: 18px;
+    }
+
+    .informacoes h1 {
+        font-size: 27px;
+    }
+
+    .detalhe strong {
+        font-size: 21px;
+    }
+
+    .footer {
+        padding-top: 40px;
+    }
 }
