@@ -8,16 +8,16 @@
 :root {
     --vinho: #301515;
     --vinho-escuro: #220e0e;
-    --vinho-card: #452626;
+    --vinho-card: #ffffff;
     --vinho-claro: #6b4545;
-    --vinho-hover: #784c4c;
+    --vinho-hover: #512b2b;
 
     --bege: #f0e5dc;
-    --texto: #f7f0ec;
-    --texto-secundario: #cbb8b4;
+    --texto: #301515;
+    --texto-secundario: #655757;
 
-    --borda: rgba(255, 255, 255, 0.12);
-    --sombra: 0 12px 35px rgba(0, 0, 0, 0.16);
+    --borda: #e8dddd;
+    --sombra: 0 12px 35px rgba(0, 0, 0, 0.15);
 }
 
 /* ========================================
@@ -80,7 +80,7 @@ body > header {
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
 
-    border: 1px solid var(--borda);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 12px;
 
     box-shadow: var(--sombra);
@@ -173,7 +173,7 @@ main#imovel {
 
     background: var(--vinho-escuro);
 
-    border: 1px solid var(--borda);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 18px;
 
     box-shadow: var(--sombra);
@@ -195,7 +195,7 @@ main#imovel {
     margin-top: 25px;
     padding: clamp(25px, 4vw, 45px);
 
-    background: var(--vinho-card);
+    background: #ffffff;
 
     border: 1px solid var(--borda);
     border-radius: 18px;
@@ -206,7 +206,7 @@ main#imovel {
 .informacoes h1 {
     margin: 8px 0 18px;
 
-    color: #fff;
+    color: var(--vinho);
     font-size: clamp(28px, 3.5vw, 42px);
     font-weight: 700;
 
@@ -217,7 +217,7 @@ main#imovel {
 .informacoes h2 {
     margin: 30px 0 15px;
 
-    color: var(--bege);
+    color: var(--vinho);
     font-size: 23px;
     font-weight: 600;
 }
@@ -233,12 +233,12 @@ main#imovel {
     margin-bottom: 12px;
     padding: 7px 14px;
 
-    background: rgba(255, 255, 255, 0.09);
+    background: #f4ebeb;
 
     border: 1px solid var(--borda);
     border-radius: 30px;
 
-    color: var(--bege);
+    color: var(--vinho);
     font-size: 13px;
     font-weight: 600;
 }
@@ -250,7 +250,7 @@ main#imovel {
 .preco {
     margin: 12px 0;
 
-    color: var(--bege) !important;
+    color: var(--vinho) !important;
     font-size: clamp(28px, 3vw, 37px);
     font-weight: 700;
 
@@ -298,7 +298,7 @@ main#imovel {
 
     text-align: center;
 
-    background: rgba(255, 255, 255, 0.055);
+    background: #f8f5f3;
 
     border: 1px solid var(--borda);
     border-radius: 12px;
@@ -307,11 +307,11 @@ main#imovel {
 }
 
 .detalhe:hover {
-    background: rgba(255, 255, 255, 0.09);
+    background: #f0e8e5;
 }
 
 .detalhe strong {
-    color: var(--bege);
+    color: var(--vinho);
     font-size: 25px;
     font-weight: 700;
 }
@@ -335,12 +335,12 @@ main#imovel {
 .caracteristica {
     padding: 11px 16px;
 
-    background: rgba(255, 255, 255, 0.07);
+    background: #f8f5f3;
 
     border: 1px solid var(--borda);
     border-radius: 9px;
 
-    color: var(--bege);
+    color: var(--vinho);
     font-size: 14px;
 }
 
@@ -369,7 +369,7 @@ main#imovel {
 
 .endereco-imovel i {
     margin-right: 6px;
-    color: var(--bege);
+    color: var(--vinho);
 }
 
 #mapaImovel {
@@ -389,7 +389,7 @@ main#imovel {
 .sem-mapa {
     padding: 18px;
 
-    background: rgba(255, 255, 255, 0.07);
+    background: #f8f5f3;
 
     border: 1px solid var(--borda);
     border-radius: 10px;
@@ -405,7 +405,7 @@ main#imovel {
     margin-top: 25px;
     padding: clamp(25px, 4vw, 45px);
 
-    background: var(--vinho-card);
+    background: #ffffff;
 
     border: 1px solid var(--borda);
     border-radius: 18px;
@@ -416,7 +416,7 @@ main#imovel {
 .agendar-visita h2 {
     margin: 0 0 12px;
 
-    color: var(--bege);
+    color: var(--vinho);
     font-size: clamp(24px, 3vw, 30px);
     font-weight: 700;
 }
@@ -441,7 +441,7 @@ main#imovel {
 }
 
 #form-visita label {
-    color: var(--bege);
+    color: var(--vinho);
     font-size: 14px;
     font-weight: 600;
 }
@@ -452,10 +452,10 @@ main#imovel {
 
     padding: 13px 15px;
 
-    background: #f2eae5;
-    color: #301515;
+    background: #ffffff;
+    color: var(--vinho);
 
-    border: 1px solid #cbbab5;
+    border: 1px solid #d8caca;
     border-radius: 9px;
 
     outline: none;
@@ -465,7 +465,7 @@ main#imovel {
 
 #form-visita input:focus {
     border-color: #a87979;
-    box-shadow: 0 0 0 3px rgba(240, 229, 220, 0.15);
+    box-shadow: 0 0 0 3px rgba(48, 21, 21, 0.08);
 }
 
 #form-visita input::placeholder {
@@ -487,10 +487,10 @@ main#imovel {
     min-height: 49px;
     padding: 12px 8px;
 
-    background: rgba(255, 255, 255, 0.06);
-    color: var(--bege);
+    background: #f8f5f3;
+    color: var(--vinho);
 
-    border: 1px solid rgba(240, 229, 220, 0.35);
+    border: 1px solid #d8caca;
     border-radius: 9px;
 
     font-weight: 600;
@@ -502,25 +502,25 @@ main#imovel {
 }
 
 .visita-horarios button:hover:not(:disabled) {
-    background: var(--vinho-claro);
-    border-color: var(--bege);
+    background: #f0e8e5;
+    border-color: var(--vinho);
 }
 
 .visita-horarios button.selecionado,
 .visita-horarios button.selecionado:hover {
-    background: var(--bege);
-    color: var(--vinho-escuro);
+    background: var(--vinho);
+    color: #ffffff;
 
-    border-color: var(--bege);
+    border-color: var(--vinho);
 
     text-decoration: none;
 }
 
 .visita-horarios button:disabled {
-    background: rgba(0, 0, 0, 0.15);
-    color: #a38d89;
+    background: #f1eeee;
+    color: #999;
 
-    border-color: rgba(255, 255, 255, 0.1);
+    border-color: #e0dada;
 
     cursor: not-allowed;
 }
@@ -541,8 +541,8 @@ main#imovel {
     min-height: 52px;
     padding: 14px 20px;
 
-    background: var(--bege);
-    color: var(--vinho-escuro);
+    background: var(--vinho);
+    color: #ffffff;
 
     border: none;
     border-radius: 9px;
@@ -556,7 +556,7 @@ main#imovel {
 }
 
 #form-visita .visita-enviar:hover:not(:disabled) {
-    background: #fff5ee;
+    background: var(--vinho-hover);
     transform: translateY(-1px);
 }
 
@@ -569,7 +569,7 @@ main#imovel {
     min-height: 24px;
     margin: 0;
 
-    color: var(--bege);
+    color: var(--vinho);
     font-size: 14px;
 }
 
@@ -590,10 +590,10 @@ main#imovel {
 
     padding: 13px 18px;
 
-    background: var(--bege);
-    color: var(--vinho-escuro);
+    background: var(--vinho);
+    color: #ffffff;
 
-    border: 1px solid var(--bege);
+    border: 1px solid var(--vinho);
     border-radius: 9px;
 
     font-weight: 700;
@@ -602,7 +602,8 @@ main#imovel {
 }
 
 .visita-login a:hover {
-    background: #fff5ee;
+    background: var(--vinho-hover);
+    color: #ffffff;
 }
 
 /* ========================================
@@ -700,7 +701,7 @@ main#imovel {
 
 .social-icons a:hover {
     background: var(--bege);
-    color: #301515;
+    color: var(--vinho);
 
     transform: translateY(-3px);
 }
@@ -756,7 +757,7 @@ main#imovel {
 
         background: var(--vinho-escuro);
 
-        border: 1px solid var(--borda);
+        border: 1px solid rgba(255, 255, 255, 0.12);
         border-radius: 12px;
 
         box-shadow: var(--sombra);
