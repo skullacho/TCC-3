@@ -34,6 +34,32 @@
 
 <body>
 
+<!-- CABEÇALHO GLOBAL (IGUAL À HOME PAGE) -->
+    <header>
+        <a href="https://home-page-bice-ten.vercel.app/" class="header-container" id="logo-container" aria-label="Ir para a página inicial">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                <polyline points="9 22 9 12 15 12 15 22" />
+            </svg>
+        </a>
+
+        <nav id="nav-container">
+            <a href="https://home-page-bice-ten.vercel.app/" class="header-link-nav">Início</a>
+            <a href="https://w.app/hangarprimeim" class="header-link-nav">Contato</a>
+            <a href="https://tcc-3-frontend.vercel.app/" class="header-link-nav active">Imóveis</a>
+            <a href="https://sobre-nos-kappa.vercel.app/" class="header-link-nav">Sobre Nós</a>
+        </nav>
+
+        <div id="links-container">
+            <div id="header-menu" role="button" tabindex="0" aria-expanded="false" aria-label="Abrir menu">
+                <div class="hmenu-bars"></div>
+                <div class="hmenu-bars"></div>
+                <div class="hmenu-bars"></div>
+            </div>
+        </div>
+    </header>
+
+
 
 
 
@@ -45,6 +71,25 @@
 
     </main>
 
+
+    <script>
+      (function () {
+        const menu = document.getElementById('header-menu');
+        const nav = document.getElementById('nav-container');
+        if (!menu || !nav) return;
+        function toggleMenu() {
+          const aberto = nav.classList.toggle('active');
+          menu.setAttribute('aria-expanded', String(aberto));
+        }
+        menu.addEventListener('click', toggleMenu);
+        menu.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            toggleMenu();
+          }
+        });
+      })();
+    </script>
 
     <!-- LEAFLET -->
     <script
@@ -82,7 +127,7 @@
                 <ul>
 
                     <li>
-                        <a href="/">
+                        <a href="https://home-page-bice-ten.vercel.app/">
                             Início
                         </a>
                     </li>
