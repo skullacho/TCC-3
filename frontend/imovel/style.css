@@ -1,4 +1,196 @@
 
+/* =========================================
+   CONFIGURAÇÕES GERAIS
+========================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #301515;
+    color: #222;
+}
+
+/* =========================================
+   PÁGINA DO IMÓVEL
+========================================= */
+
+main {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+/* =========================================
+   GALERIA
+========================================= */
+
+.galeria {
+    width: 100%;
+    height: 500px;
+    overflow: hidden;
+    border-radius: 15px;
+    background: #ddd;
+}
+
+.galeria img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* =========================================
+   INFORMAÇÕES DO IMÓVEL
+========================================= */
+
+.informacoes {
+    background: white;
+    margin-top: 25px;
+    padding: 35px;
+    border-radius: 15px;
+}
+
+.informacoes h1 {
+    font-size: 35px;
+    margin: 10px 0;
+}
+
+.informacoes h2 {
+    margin-top: 30px;
+}
+
+.informacoes p {
+    line-height: 1.7;
+}
+
+.preco {
+    font-size: 28px;
+    font-weight: bold;
+    color: #301515;
+}
+
+.localizacao {
+    color: #666;
+    font-size: 18px;
+}
+
+.localizacao i {
+    margin-right: 5px;
+}
+
+/* =========================================
+   DETALHES DO IMÓVEL
+========================================= */
+
+.detalhes {
+    display: flex;
+    gap: 40px;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    padding: 25px 0;
+    margin: 25px 0;
+}
+
+.detalhe {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.detalhe strong {
+    font-size: 22px;
+}
+
+.detalhe span {
+    color: #666;
+}
+
+/* =========================================
+   CARACTERÍSTICAS
+========================================= */
+
+.caracteristicas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.caracteristica {
+    background: #f1f1f1;
+    padding: 10px 15px;
+    border-radius: 8px;
+}
+
+/* =========================================
+   LOCALIZAÇÃO / MAPA
+========================================= */
+
+.secao-localizacao {
+    margin-top: 35px;
+    padding-top: 10px;
+}
+
+.secao-localizacao h2 {
+    margin-bottom: 10px;
+}
+
+.endereco-imovel {
+    color: #666;
+    font-size: 16px;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.endereco-imovel i {
+    color: #301515;
+    margin-right: 5px;
+}
+
+#mapaImovel {
+    width: 100%;
+    height: 400px;
+    margin-top: 15px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    overflow: hidden;
+}
+
+.sem-mapa {
+    color: #777;
+    background: #f5f5f5;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+/* =========================================
+   AGENDAMENTO DE VISITAS
+========================================= */
+
+.agendar-visita {
+    background: #fff;
+    border-radius: 15px;
+    padding: 35px;
+    margin-top: 24px;
+}
+
+.agendar-visita h2 {
+    margin: 0 0 10px;
+    font-size: 26px;
+    color: #301515;
+}
+
+.agendar-visita p {
+    color: #666;
+    line-height: 1.6;
+}
+
+/* =========================================
+   BOTÃO DE LOGIN
+========================================= */
+
 .visita-login {
     margin: 16px 0 22px;
 }
@@ -6,6 +198,7 @@
 .visita-login a {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
     padding: 12px 18px;
     border: 1px solid #743737;
@@ -14,18 +207,71 @@
     color: #743737;
     text-decoration: none;
     font-weight: 700;
-    transition: 0.2s;
+    transition: 0.2s ease;
 }
 
 .visita-login a:hover {
     background: #f7eeee;
+    border-color: #301515;
 }
 
-.visita-horarios button.ocupado {
-    opacity: 0.5;
-    cursor: not-allowed;
-    text-decoration: line-through;
+/* =========================================
+   FORMULÁRIO
+========================================= */
+
+#form-visita {
+    display: grid;
+    gap: 12px;
+    max-width: 600px;
+    margin-top: 24px;
 }
+
+#form-visita label {
+    font-weight: 600;
+    color: #333;
+}
+
+#form-visita input {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font: inherit;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+#form-visita input:focus {
+    border-color: #743737;
+}
+
+/* =========================================
+   HORÁRIOS DISPONÍVEIS
+========================================= */
+
+.visita-horarios {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.visita-horarios button {
+    padding: 13px 5px;
+    border: 1px solid #301515;
+    border-radius: 8px;
+    background: #fff;
+    color: #301515;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+.visita-horarios button:hover:not(:disabled) {
+    background: #f7eeee;
+}
+
+/* Horário selecionado */
 
 .visita-horarios button.selecionado {
     background: #743737;
@@ -34,13 +280,223 @@
     text-decoration: none;
 }
 
+/* Horário realmente ocupado */
+
+.visita-horarios button.ocupado {
+    background: #eee;
+    color: #888;
+    border-color: #ddd;
+    opacity: 0.6;
+    cursor: not-allowed;
+    text-decoration: line-through;
+}
+
+/* Horário desabilitado durante a consulta */
+
 .visita-horarios button:disabled:not(.ocupado) {
-    opacity: 0.5;
+    background: #f5f5f5;
+    color: #888;
+    border-color: #ddd;
+    opacity: 0.6;
     cursor: not-allowed;
     text-decoration: none;
 }
 
+/* =========================================
+   BOTÃO SOLICITAR VISITA
+========================================= */
+
+#form-visita .visita-enviar {
+    background: #301515;
+    color: #fff;
+    padding: 15px;
+    border: 0;
+    border-radius: 8px;
+    font: inherit;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+#form-visita .visita-enviar:hover:not(:disabled) {
+    background: #542626;
+}
+
+#form-visita .visita-enviar:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* =========================================
+   MENSAGENS DO AGENDAMENTO
+========================================= */
+
 #visita-mensagem {
+    min-height: 24px;
+    margin: 0;
     line-height: 1.6;
     overflow-wrap: anywhere;
+}
+
+/* =========================================
+   FOOTER ORIGINAL
+========================================= */
+
+.footer {
+    background: #050505;
+    color: #fff;
+    padding-top: 60px;
+    width: 100%;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.footer-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+    gap: 40px;
+}
+
+.footer h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #ffffff;
+}
+
+.footer h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #ffffff;
+}
+
+.footer p,
+.footer a {
+    color: #bdbdbd;
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.footer a {
+    text-decoration: none;
+    transition: 0.3s ease;
+}
+
+.footer a:hover {
+    color: #ffffff;
+}
+
+.footer-links ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-links li {
+    margin-bottom: 10px;
+}
+
+.social-icons {
+    display: flex;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.social-icons a {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 50%;
+    font-size: 16px;
+    transition: 0.3s ease;
+}
+
+.social-icons a:hover {
+    background: #ffffff;
+    color: #000;
+    transform: translateY(-4px);
+}
+
+.footer-bottom {
+    margin-top: 50px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    background: #030303;
+    padding: 20px 10px;
+    text-align: center;
+}
+
+.footer-bottom p {
+    color: #a8a8a8;
+    font-size: 14px;
+}
+
+/* =========================================
+   RESPONSIVIDADE
+========================================= */
+
+@media (max-width: 700px) {
+
+    main {
+        margin: 20px auto;
+        padding: 0 12px;
+    }
+
+    .galeria {
+        height: 300px;
+    }
+
+    .informacoes {
+        padding: 20px;
+    }
+
+    .informacoes h1 {
+        font-size: 27px;
+    }
+
+    .preco {
+        font-size: 25px;
+    }
+
+    .detalhes {
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .detalhe {
+        min-width: 80px;
+    }
+
+    #mapaImovel {
+        height: 300px;
+    }
+
+    .agendar-visita {
+        padding: 20px;
+    }
+
+    .agendar-visita h2 {
+        font-size: 23px;
+    }
+
+    .visita-horarios {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .visita-login a {
+        width: 100%;
+        text-align: center;
+    }
+
+    .footer-container {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+
+    .footer {
+        padding-top: 40px;
+    }
 }
