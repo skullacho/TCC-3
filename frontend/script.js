@@ -29,6 +29,29 @@ document.addEventListener("DOMContentLoaded", () => {
         destino.searchParams.set("retorno", location.origin + location.pathname + location.search);
         location.assign(destino.toString());
     }
+    async function atualizarDisponibilidade() {
+        const data = document.getElementById("agenda-data").value;
+        const botoes = [...document.querySelectorAll(".agenda-horarios button")];
+        horarioEscolhido = null;
+        botoes.forEach(b => { b.classList.remove("selecionado"); b.disabled = true; b.title = "Selecione uma data"; });
+        if (!imovelEscolhido || !data) return;
+        mensagemAgenda.textContent = "Consultando horários disponíveis...";
+        try {
+            const url = `${API_AGENDA}/disponibilidade?imovelId=${encodeURIComponent(imovelEscolhido._id)}&data=${encodeURIComponent(data)}`;
+            const resposta = await fetch(url, { cache: "no-store" });
+            const dados = await resposta.json();
+            if (!resposta.ok) throw new Error(dados.erro || "Erro ao consultar horários.");
+            const ocupados = new Set(dados.ocupados);
+            botoes.forEach(b => {
+                b.disabled = ocupados.has(b.dataset.hora);
+                b.title = b.disabled ? "Horário indisponível" : "Horário disponível";
+            });
+            mensagemAgenda.textContent = botoes.every(b => b.disabled) ? "Não há horários disponíveis nessa data." : "Selecione um horário disponível.";
+        } catch (erro) {
+            mensagemAgenda.textContent = erro.message;
+        }
+    }
+    document.getElementById("agenda-data").addEventListener("change", atualizarDisponibilidade);
     function abrirAgenda(imovel) {
         if (!token()) {
             irParaLogin(imovel._id);
@@ -40,6 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("agenda-imovel").textContent = imovel.titulo || "Imóvel";
         mensagemAgenda.textContent = "";
         formAgenda.reset();
+        document.querySelectorAll(".agenda-horarios button").forEach(b => b.disabled = true);
         modalAgenda.hidden = false;
         document.getElementById("agenda-data").focus();
     }
@@ -47,6 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
     modalAgenda.addEventListener("click", e => { if (e.target === modalAgenda) modalAgenda.hidden = true; });
     document.addEventListener("keydown", e => { if (e.key === "Escape") modalAgenda.hidden = true; });
     document.querySelectorAll(".agenda-horarios button").forEach(btn => btn.addEventListener("click", () => {
+        if (btn.disabled) return;
         horarioEscolhido = btn.dataset.hora;
         document.querySelectorAll(".agenda-horarios button").forEach(b => b.classList.toggle("selecionado", b === btn));
     }));
@@ -64,12 +89,14 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!resposta.ok) throw new Error(dados.erro || "Falha ao solicitar visita.");
             mensagemAgenda.textContent = dados.mensagem;
             await carregarMeusAgendamentos();
+            await atualizarDisponibilidade();
             formAgenda.reset();
             horarioEscolhido = null;
             document.querySelectorAll(".agenda-horarios button").forEach(b => b.classList.remove("selecionado"));
         } catch (erro) {
             mensagemAgenda.textContent = erro.message;
             if (/sessão|login/i.test(erro.message)) sessionStorage.removeItem("hangar_token");
+            if (/horário|ocupado|solicitado/i.test(erro.message)) await atualizarDisponibilidade();
         } finally { btn.disabled = false; }
     });
     const listaAgenda = document.getElementById("lista-agendamentos");

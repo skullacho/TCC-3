@@ -579,3 +579,6 @@ select option {
 .agenda-item { border-top: 1px solid var(--border-color); padding: 12px 0; font-size: 14px; line-height: 1.7; }
 .agenda-item strong { display: block; }
 @media(max-width:600px) { .agendamentos-topo { align-items: flex-start; flex-direction: column; } .agenda-dialog { padding: 22px; } }
+
+/* Horários reservados: não podem ser selecionados */
+.agenda-horarios button:disabled { opacity: .45; cursor: not-allowed; text-decoration: line-through; background: #eee; color: #777; }
