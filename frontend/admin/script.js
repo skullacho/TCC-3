@@ -1,599 +1,272 @@
-const API =
-    "https://tcc-3-nnmd.onrender.com/api/imoveis";
 
+const API = "https://tcc-3-nnmd.onrender.com/api/imoveis";
+const API_ADMIN = "https://tcc-3-nnmd.onrender.com/api/admin";
 
-// ========================================
-// ELEMENTOS
-// ========================================
-
-const form =
-    document.getElementById("formImovel");
-
-const lista =
-    document.getElementById("listaImoveis");
-
-const mensagem =
-    document.getElementById("mensagem");
-
-const textoLocalizacao =
-    document.getElementById("textoLocalizacao");
-
-
-// ========================================
-// VARIÁVEIS DA LOCALIZAÇÃO
-// ========================================
+const form = document.getElementById("formImovel");
+const lista = document.getElementById("listaImoveis");
+const mensagem = document.getElementById("mensagem");
+const textoLocalizacao = document.getElementById("textoLocalizacao");
 
 let latitudeSelecionada = null;
-
 let longitudeSelecionada = null;
-
 let marcador = null;
-
 let mapa = null;
 let imovelEmEdicao = null;
 
+function tokenAdmin() {
+    return window.AdminAuth?.token() || "";
+}
 
 // ========================================
-// CRIAR MAPA
+// MAPA DE CADASTRO
 // ========================================
 
 function iniciarMapa() {
-
-    const elementoMapa =
-        document.getElementById(
-            "mapaCadastro"
-        );
-
+    const elementoMapa = document.getElementById("mapaCadastro");
 
     if (!elementoMapa) {
-
-        console.error(
-            "Elemento #mapaCadastro não encontrado."
-        );
-
+        console.error("Elemento #mapaCadastro não encontrado.");
         return;
     }
-
 
     if (typeof L === "undefined") {
-
-        console.error(
-            "Leaflet não foi carregado."
-        );
-
-        elementoMapa.innerHTML = `
-            <div class="erro-mapa">
-                Não foi possível carregar o mapa.
-            </div>
-        `;
-
+        elementoMapa.textContent = "Não foi possível carregar o mapa.";
         return;
     }
 
-
-    // ========================================
-    // CRIAR MAPA
-    // ========================================
-
-    mapa =
-        L.map(
-            "mapaCadastro"
-        ).setView(
-            [-22.9056, -47.0608],
-            13
-        );
-
-
-    // ========================================
-    // OPENSTREETMAP
-    // ========================================
+    mapa = L.map("mapaCadastro").setView(
+        [-22.9056, -47.0608],
+        13
+    );
 
     L.tileLayer(
         "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
         {
             maxZoom: 19,
-
-            attribution:
-                '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }
     ).addTo(mapa);
 
+    mapa.on("click", event => {
+        latitudeSelecionada = event.latlng.lat;
+        longitudeSelecionada = event.latlng.lng;
 
-    // ========================================
-    // CLIQUE
-    // ========================================
-
-    mapa.on(
-        "click",
-        function (event) {
-
-            latitudeSelecionada =
-                event.latlng.lat;
-
-            longitudeSelecionada =
-                event.latlng.lng;
-
-
-            // Se já existe marcador,
-            // apenas mover.
-
-            if (marcador) {
-
-                marcador.setLatLng(
-                    event.latlng
-                );
-
-            } else {
-
-                marcador =
-                    L.marker(
-                        event.latlng
-                    ).addTo(
-                        mapa
-                    );
-
-            }
-
-
-            marcador
-                .bindPopup(
-                    "Localização do imóvel"
-                )
-                .openPopup();
-
-
-            textoLocalizacao.textContent =
-                "Localização selecionada ✓";
-
-
-            textoLocalizacao.classList.add(
-                "selecionada"
-            );
-
+        if (marcador) {
+            marcador.setLatLng(event.latlng);
+        } else {
+            marcador = L.marker(event.latlng).addTo(mapa);
         }
-    );
 
+        marcador
+            .bindPopup("Localização do imóvel")
+            .openPopup();
 
-    // Corrige possíveis problemas
-    // de tamanho do Leaflet.
+        textoLocalizacao.textContent = "Localização selecionada ✓";
+        textoLocalizacao.classList.add("selecionada");
+    });
 
-    setTimeout(
-        function () {
-
-            mapa.invalidateSize();
-
-        },
-        200
-    );
-
+    setTimeout(() => mapa.invalidateSize(), 200);
 }
 
-
 // ========================================
-// CADASTRAR
+// CADASTRAR OU EDITAR IMÓVEL
 // ========================================
 
-form.addEventListener(
-    "submit",
-    async function (event) {
-
-        event.preventDefault();
-
-
-        // ========================================
-        // LOCALIZAÇÃO OBRIGATÓRIA
-        // ========================================
-
-        if (
-            latitudeSelecionada === null ||
-            longitudeSelecionada === null
-        ) {
-
-            mensagem.textContent =
-                "Clique no mapa para marcar a localização do imóvel.";
-
-            mensagem.style.color =
-                "red";
-
-            return;
-        }
-
-
-        const imagem =
-            document
-                .getElementById("imagens")
-                .value
-                .trim();
-
-
-        // ========================================
-        // OBJETO
-        // ========================================
-
-        const imovel = {
-
-            titulo:
-                document
-                    .getElementById("titulo")
-                    .value,
-
-            tipo:
-                document
-                    .getElementById("tipo")
-                    .value,
-
-            finalidade:
-                document
-                    .getElementById("finalidade")
-                    .value,
-
-            preco:
-                Number(
-                    document
-                        .getElementById("preco")
-                        .value
-                ),
-
-            cidade:
-                document
-                    .getElementById("cidade")
-                    .value,
-
-            bairro:
-                document
-                    .getElementById("bairro")
-                    .value,
-
-            endereco:
-                document
-                    .getElementById("endereco")
-                    .value,
-
-
-            // LOCALIZAÇÃO
-
-            latitude:
-                latitudeSelecionada,
-
-            longitude:
-                longitudeSelecionada,
-
-
-            area:
-                Number(
-                    document
-                        .getElementById("area")
-                        .value
-                ),
-
-            quartos:
-                Number(
-                    document
-                        .getElementById("quartos")
-                        .value
-                ),
-
-            banheiros:
-                Number(
-                    document
-                        .getElementById("banheiros")
-                        .value
-                ),
-
-            vagas:
-                Number(
-                    document
-                        .getElementById("vagas")
-                        .value
-                ),
-
-            descricao:
-                document
-                    .getElementById("descricao")
-                    .value,
-
-            imagens:
-                imagem
-                    ? [imagem]
-                    : [],
-
-            caracteristicas:
-                [],
-
-            destaque:
-                document
-                    .getElementById("destaque")
-                    .checked,
-
-            lancamento:
-                false
-
-        };
-
-
-        // Preservar campos não editados ao atualizar.
-        if (imovelEmEdicao) {
-            delete imovel.caracteristicas;
-            delete imovel.lancamento;
-        }
-
-        // ========================================
-        // POST / PUT
-        // ========================================
-
-        try {
-
-            mensagem.textContent =
-                imovelEmEdicao ? "Salvando alterações..." : "Cadastrando imóvel...";
-
-            mensagem.style.color =
-                "#333";
-
-
-            const resposta =
-                await fetch(
-                    imovelEmEdicao ? `${API}/${imovelEmEdicao}` : API,
-                    {
-                        method:
-                            imovelEmEdicao ? "PUT" : "POST",
-
-                        headers: {
-                            "Content-Type":
-                                "application/json",
-                            "Authorization": `Bearer ${window.AdminAuth.token()}`
-                        },
-
-                        body:
-                            JSON.stringify(
-                                imovel
-                            )
-                    }
-                );
-
-
-            const dados =
-                await resposta.json();
-
-
-            if (!resposta.ok) {
-
-                throw new Error(
-                    dados.erro ||
-                    "Erro ao cadastrar"
-                );
-
-            }
-
-
-            // ========================================
-            // SUCESSO
-            // ========================================
-
-            mensagem.textContent =
-                imovelEmEdicao ? "Imóvel atualizado com sucesso!" : "Imóvel cadastrado com sucesso!";
-            imovelEmEdicao = null;
-            const botao = form.querySelector('[type="submit"]');
-            if (botao) botao.textContent = "Cadastrar imóvel";
-
-            mensagem.style.color =
-                "green";
-
-
-            // Limpar formulário
-
-            form.reset();
-
-
-            // Limpar localização
-
-            latitudeSelecionada =
-                null;
-
-            longitudeSelecionada =
-                null;
-
-
-            textoLocalizacao.textContent =
-                "Nenhuma localização selecionada";
-
-            textoLocalizacao.classList.remove(
-                "selecionada"
-            );
-
-
-            // Limpar marcador
-
-            if (marcador) {
-
-                mapa.removeLayer(
-                    marcador
-                );
-
-                marcador =
-                    null;
-
-            }
-
-
-            // Voltar mapa
-
-            mapa.setView(
-                [-22.9056, -47.0608],
-                13
-            );
-
-
-            carregarImoveis();
-
-
-        } catch (error) {
-
-            console.error(
-                "Erro no cadastro:",
-                error
-            );
-
-
-            mensagem.textContent =
-                "Erro ao cadastrar imóvel.";
-
-            mensagem.style.color =
-                "red";
-
-        }
-
+form.addEventListener("submit", async event => {
+    event.preventDefault();
+
+    if (
+        latitudeSelecionada === null ||
+        longitudeSelecionada === null
+    ) {
+        mensagem.textContent =
+            "Clique no mapa para marcar a localização do imóvel.";
+        mensagem.style.color = "red";
+        return;
     }
-);
 
+    const imagem = document.getElementById("imagens").value.trim();
+
+    const imovel = {
+        titulo: document.getElementById("titulo").value,
+        tipo: document.getElementById("tipo").value,
+        finalidade: document.getElementById("finalidade").value,
+        preco: Number(document.getElementById("preco").value),
+        cidade: document.getElementById("cidade").value,
+        bairro: document.getElementById("bairro").value,
+        endereco: document.getElementById("endereco").value,
+        latitude: latitudeSelecionada,
+        longitude: longitudeSelecionada,
+        area: Number(document.getElementById("area").value),
+        quartos: Number(document.getElementById("quartos").value),
+        banheiros: Number(document.getElementById("banheiros").value),
+        vagas: Number(document.getElementById("vagas").value),
+        descricao: document.getElementById("descricao").value,
+        imagens: imagem ? [imagem] : [],
+        caracteristicas: [],
+        destaque: document.getElementById("destaque").checked,
+        lancamento: false
+    };
+
+    if (imovelEmEdicao) {
+        delete imovel.caracteristicas;
+        delete imovel.lancamento;
+    }
+
+    try {
+        mensagem.textContent = imovelEmEdicao
+            ? "Salvando alterações..."
+            : "Cadastrando imóvel...";
+        mensagem.style.color = "#333";
+
+        const resposta = await fetch(
+            imovelEmEdicao ? `${API}/${imovelEmEdicao}` : API,
+            {
+                method: imovelEmEdicao ? "PUT" : "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${tokenAdmin()}`
+                },
+                body: JSON.stringify(imovel)
+            }
+        );
+
+        const dados = await resposta.json();
+
+        if (!resposta.ok) {
+            throw new Error(dados.erro || "Erro ao salvar imóvel.");
+        }
+
+        mensagem.textContent = imovelEmEdicao
+            ? "Imóvel atualizado com sucesso!"
+            : "Imóvel cadastrado com sucesso!";
+        mensagem.style.color = "green";
+
+        imovelEmEdicao = null;
+
+        const botao = form.querySelector('[type="submit"]');
+        if (botao) botao.textContent = "Cadastrar imóvel";
+
+        form.reset();
+
+        latitudeSelecionada = null;
+        longitudeSelecionada = null;
+
+        textoLocalizacao.textContent =
+            "Nenhuma localização selecionada";
+        textoLocalizacao.classList.remove("selecionada");
+
+        if (marcador && mapa) {
+            mapa.removeLayer(marcador);
+            marcador = null;
+        }
+
+        if (mapa) {
+            mapa.setView([-22.9056, -47.0608], 13);
+        }
+
+        await carregarImoveis();
+
+    } catch (erro) {
+        console.error("Erro ao salvar imóvel:", erro);
+        mensagem.textContent = erro.message;
+        mensagem.style.color = "red";
+    }
+});
 
 // ========================================
-// CARREGAR IMÓVEIS
+// LISTAR IMÓVEIS
 // ========================================
 
 async function carregarImoveis() {
-
     try {
-
-        const resposta =
-            await fetch(API);
-
+        const resposta = await fetch(API);
 
         if (!resposta.ok) {
-
-            throw new Error(
-                "Erro ao carregar imóveis"
-            );
-
+            throw new Error("Erro ao carregar imóveis.");
         }
 
+        const imoveis = await resposta.json();
+        lista.replaceChildren();
 
-        const imoveis =
-            await resposta.json();
-
-
-        lista.innerHTML =
-            "";
-
-
-        if (
-            !Array.isArray(imoveis) ||
-            imoveis.length === 0
-        ) {
-
-            lista.innerHTML = `
-                <p>
-                    Nenhum imóvel cadastrado.
-                </p>
-            `;
-
+        if (!Array.isArray(imoveis) || imoveis.length === 0) {
+            lista.textContent = "Nenhum imóvel cadastrado.";
             return;
         }
 
+        imoveis.forEach(imovel => {
+            const elemento = document.createElement("div");
+            elemento.className = "imovel";
 
-        imoveis.forEach(
-            function (imovel) {
+            const informacoes = document.createElement("div");
+            informacoes.className = "imovel-info";
 
-                const elemento =
-                    document.createElement(
-                        "div"
-                    );
+            const titulo = document.createElement("h3");
+            titulo.textContent = imovel.titulo || "Sem título";
 
+            const endereco = document.createElement("p");
+            endereco.textContent =
+                `${imovel.bairro || ""} - ${imovel.cidade || ""}`;
 
-                elemento.className =
-                    "imovel";
+            const preco = document.createElement("p");
+            preco.textContent =
+                "R$ " + Number(imovel.preco || 0).toLocaleString("pt-BR");
 
+            const tipo = document.createElement("p");
+            tipo.textContent =
+                `${imovel.tipo || ""} - ${imovel.finalidade || ""}`;
 
-                const preco =
-                    Number(
-                        imovel.preco || 0
-                    ).toLocaleString(
-                        "pt-BR"
-                    );
+            const localizacao = document.createElement("p");
 
+            const possuiLocalizacao =
+                imovel.latitude != null &&
+                imovel.longitude != null;
 
-                elemento.innerHTML = `
+            localizacao.className = possuiLocalizacao
+                ? "localizacao-cadastrada"
+                : "localizacao-nao-cadastrada";
 
-                    <div class="imovel-info">
+            localizacao.textContent = possuiLocalizacao
+                ? "📍 Localização cadastrada"
+                : "Localização não cadastrada";
 
-                        <h3>
-                            ${imovel.titulo}
-                        </h3>
+            informacoes.append(
+                titulo,
+                endereco,
+                preco,
+                tipo,
+                localizacao
+            );
 
-                        <p>
-                            ${imovel.bairro}
-                            -
-                            ${imovel.cidade}
-                        </p>
+            const acoes = document.createElement("div");
+            acoes.className = "acoes-imovel";
 
-                        <p>
-                            R$ ${preco}
-                        </p>
+            const editar = document.createElement("button");
+            editar.type = "button";
+            editar.className = "btn-editar";
+            editar.textContent = "Editar";
+            editar.addEventListener("click", () => {
+                editarImovel(imovel._id);
+            });
 
-                        <p>
-                            ${imovel.tipo}
-                            -
-                            ${imovel.finalidade}
-                        </p>
+            const excluir = document.createElement("button");
+            excluir.type = "button";
+            excluir.className = "btn-excluir";
+            excluir.textContent = "Excluir";
+            excluir.addEventListener("click", () => {
+                excluirImovel(imovel._id);
+            });
 
-                        ${
-                            imovel.latitude != null &&
-                            imovel.longitude != null
+            acoes.append(editar, excluir);
+            elemento.append(informacoes, acoes);
+            lista.appendChild(elemento);
+        });
 
-                            ? `
-                                <p class="localizacao-cadastrada">
-                                    📍 Localização cadastrada
-                                </p>
-                            `
-
-                            : `
-                                <p class="localizacao-nao-cadastrada">
-                                    Localização não cadastrada
-                                </p>
-                            `
-                        }
-
-                    </div>
-
-
-                    <div class="acoes-imovel">
-                    <button type="button" class="btn-editar" onclick="editarImovel('${imovel._id}')">Editar</button>
-                    <button
-                        class="btn-excluir"
-                        onclick="excluirImovel('${imovel._id}')"
-                    >
-                        Excluir
-                    </button>
-                    </div>
-
-                `;
-
-
-                lista.appendChild(
-                    elemento
-                );
-
-            }
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "Erro ao carregar imóveis:",
-            error
-        );
-
-
-        lista.innerHTML = `
-            <p>
-                Erro ao carregar imóveis.
-            </p>
-        `;
-
+    } catch (erro) {
+        console.error("Erro ao carregar imóveis:", erro);
+        lista.textContent = "Erro ao carregar imóveis.";
     }
-
 }
-
 
 // ========================================
 // EDITAR IMÓVEL
@@ -602,117 +275,537 @@ async function carregarImoveis() {
 async function editarImovel(id) {
     try {
         const resposta = await fetch(`${API}/${id}`);
-        if (!resposta.ok) throw new Error("Erro ao buscar imóvel");
+
+        if (!resposta.ok) {
+            throw new Error("Erro ao buscar imóvel.");
+        }
+
         const imovel = await resposta.json();
 
         const campos = [
-            "titulo", "tipo", "finalidade", "preco", "cidade",
-            "bairro", "endereco", "area", "quartos", "banheiros",
-            "vagas", "descricao"
+            "titulo",
+            "tipo",
+            "finalidade",
+            "preco",
+            "cidade",
+            "bairro",
+            "endereco",
+            "area",
+            "quartos",
+            "banheiros",
+            "vagas",
+            "descricao"
         ];
+
         campos.forEach(nome => {
             const campo = document.getElementById(nome);
-            if (campo) campo.value = imovel[nome] ?? "";
+
+            if (campo) {
+                campo.value = imovel[nome] ?? "";
+            }
         });
-        document.getElementById("imagens").value = imovel.imagens?.[0] || "";
-        document.getElementById("destaque").checked = Boolean(imovel.destaque);
+
+        document.getElementById("imagens").value =
+            imovel.imagens?.[0] || "";
+
+        document.getElementById("destaque").checked =
+            Boolean(imovel.destaque);
 
         latitudeSelecionada = imovel.latitude ?? null;
         longitudeSelecionada = imovel.longitude ?? null;
+
         if (marcador && mapa) {
             mapa.removeLayer(marcador);
             marcador = null;
         }
-        if (latitudeSelecionada !== null && longitudeSelecionada !== null && mapa) {
-            const posicao = [Number(latitudeSelecionada), Number(longitudeSelecionada)];
+
+        if (
+            latitudeSelecionada !== null &&
+            longitudeSelecionada !== null &&
+            mapa
+        ) {
+            const posicao = [
+                Number(latitudeSelecionada),
+                Number(longitudeSelecionada)
+            ];
+
             marcador = L.marker(posicao).addTo(mapa);
             marcador.bindPopup("Localização do imóvel");
             mapa.setView(posicao, 15);
-            textoLocalizacao.textContent = "Localização selecionada ✓";
+
+            textoLocalizacao.textContent =
+                "Localização selecionada ✓";
             textoLocalizacao.classList.add("selecionada");
         } else {
-            textoLocalizacao.textContent = "Nenhuma localização selecionada";
+            textoLocalizacao.textContent =
+                "Nenhuma localização selecionada";
             textoLocalizacao.classList.remove("selecionada");
         }
 
         imovelEmEdicao = id;
+
         const botao = form.querySelector('[type="submit"]');
         if (botao) botao.textContent = "Salvar alterações";
-        mensagem.textContent = "Editando imóvel. Altere os campos e salve.";
+
+        mensagem.textContent =
+            "Editando imóvel. Altere os campos e salve.";
         mensagem.style.color = "#333";
-        form.scrollIntoView({ behavior: "smooth", block: "start" });
-        if (mapa) setTimeout(() => mapa.invalidateSize(), 350);
-    } catch (error) {
-        console.error("Erro ao editar imóvel:", error);
+
+        form.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
+        if (mapa) {
+            setTimeout(() => mapa.invalidateSize(), 350);
+        }
+
+    } catch (erro) {
+        console.error("Erro ao editar imóvel:", erro);
         alert("Não foi possível carregar o imóvel para edição.");
     }
 }
 
 // ========================================
-// EXCLUIR
+// EXCLUIR IMÓVEL
 // ========================================
 
 async function excluirImovel(id) {
-
-    const confirmar =
-        confirm(
-            "Tem certeza que deseja excluir este imóvel?"
-        );
-
-
-    if (!confirmar) {
-
+    if (!confirm("Tem certeza que deseja excluir este imóvel?")) {
         return;
-
     }
-
 
     try {
-
-        const resposta =
-            await fetch(
-                `${API}/${id}`,
-                {
-                    method:
-                        "DELETE",
-                    headers: { "Authorization": `Bearer ${window.AdminAuth.token()}` }
-                }
-            );
-
+        const resposta = await fetch(`${API}/${id}`, {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${tokenAdmin()}`
+            }
+        });
 
         if (!resposta.ok) {
-
-            throw new Error(
-                "Erro ao excluir"
-            );
-
+            throw new Error("Erro ao excluir imóvel.");
         }
 
+        await carregarImoveis();
 
-        carregarImoveis();
-
-
-    } catch (error) {
-
-        console.error(
-            error
-        );
-
-
-        alert(
-            "Não foi possível excluir o imóvel."
-        );
-
+    } catch (erro) {
+        console.error("Erro ao excluir imóvel:", erro);
+        alert("Não foi possível excluir o imóvel.");
     }
-
 }
 
+// ========================================
+// GERENCIAMENTO DE AGENDAMENTOS
+// ========================================
+
+const listaVisitas = document.getElementById(
+    "listaAgendamentosAdmin"
+);
+
+const mensagemVisitas = document.getElementById(
+    "mensagemAgendamentos"
+);
+
+const filtroVisitas = document.getElementById(
+    "filtroStatusAgendamento"
+);
+
+const botaoAtualizarVisitas = document.getElementById(
+    "atualizarAgendamentos"
+);
+
+let agendamentos = [];
+let carregandoVisitas = false;
 
 // ========================================
-// INICIAR
+// FUNÇÕES AUXILIARES
+// ========================================
+
+function criarElemento(tag, classe = "", texto) {
+    const elemento = document.createElement(tag);
+
+    if (classe) {
+        elemento.className = classe;
+    }
+
+    if (texto !== undefined) {
+        elemento.textContent = String(texto);
+    }
+
+    return elemento;
+}
+
+function adicionarInformacao(container, rotulo, valor) {
+    const linha = criarElemento(
+        "p",
+        "agendamento-informacao"
+    );
+
+    const destaque = criarElemento(
+        "strong",
+        "",
+        `${rotulo}: `
+    );
+
+    linha.append(
+        destaque,
+        document.createTextNode(String(valor ?? "-"))
+    );
+
+    container.appendChild(linha);
+}
+
+function formatarDataVisita(data) {
+    const partes = String(data || "").split("-");
+
+    if (partes.length !== 3) {
+        return String(data || "-");
+    }
+
+    return `${partes[2]}/${partes[1]}/${partes[0]}`;
+}
+
+function nomeStatus(status) {
+    const nomes = {
+        pendente: "Pendente",
+        confirmado: "Confirmado",
+        recusado: "Recusado",
+        cancelado: "Cancelado"
+    };
+
+    return nomes[status] || status;
+}
+
+// ========================================
+// EXIBIR SOLICITAÇÕES
+// ========================================
+
+function renderizarAgendamentos() {
+    if (!listaVisitas || !filtroVisitas) return;
+
+    listaVisitas.replaceChildren();
+
+    const statusSelecionado = filtroVisitas.value;
+
+    const filtrados = agendamentos
+        .filter(item => {
+            return (
+                statusSelecionado === "todos" ||
+                item.status === statusSelecionado
+            );
+        })
+        .sort((a, b) => {
+            const pendenteA = a.status === "pendente" ? 1 : 0;
+            const pendenteB = b.status === "pendente" ? 1 : 0;
+
+            return (
+                pendenteB - pendenteA ||
+                new Date(b.createdAt) - new Date(a.createdAt)
+            );
+        });
+
+    if (filtrados.length === 0) {
+        listaVisitas.appendChild(
+            criarElemento(
+                "p",
+                "agendamentos-vazio",
+                "Nenhuma solicitação encontrada."
+            )
+        );
+        return;
+    }
+
+    filtrados.forEach(item => {
+        const card = criarElemento(
+            "article",
+            "agendamento-admin-card"
+        );
+
+        const topo = criarElemento(
+            "div",
+            "agendamento-admin-topo"
+        );
+
+        const titulo = criarElemento(
+            "h3",
+            "",
+            item.imovel?.titulo || "Imóvel não encontrado"
+        );
+
+        const status = criarElemento(
+            "span",
+            `agendamento-status status-${item.status}`,
+            nomeStatus(item.status)
+        );
+
+        topo.append(titulo, status);
+        card.appendChild(topo);
+
+        const detalhes = criarElemento(
+            "div",
+            "agendamento-admin-informacoes"
+        );
+
+        adicionarInformacao(
+            detalhes,
+            "Cliente",
+            item.usuario?.nome || "Usuário não encontrado"
+        );
+
+        adicionarInformacao(
+            detalhes,
+            "E-mail",
+            item.usuario?.email || "-"
+        );
+
+        adicionarInformacao(
+            detalhes,
+            "Telefone",
+            item.telefone
+        );
+
+        adicionarInformacao(
+            detalhes,
+            "Data",
+            formatarDataVisita(item.data)
+        );
+
+        adicionarInformacao(
+            detalhes,
+            "Horário",
+            item.horario
+        );
+
+        adicionarInformacao(
+            detalhes,
+            "Local",
+            [
+                item.imovel?.bairro,
+                item.imovel?.cidade
+            ].filter(Boolean).join(" - ") || "-"
+        );
+
+        card.appendChild(detalhes);
+
+        if (item.status === "pendente") {
+            const acoes = criarElemento(
+                "div",
+                "agendamento-admin-acoes"
+            );
+
+            const aceitar = criarElemento(
+                "button",
+                "btn-aceitar-visita",
+                "Aceitar visita"
+            );
+
+            aceitar.type = "button";
+
+            aceitar.addEventListener("click", () => {
+                atualizarStatusVisita(
+                    item._id,
+                    "confirmado"
+                );
+            });
+
+            const rejeitar = criarElemento(
+                "button",
+                "btn-rejeitar-visita",
+                "Rejeitar visita"
+            );
+
+            rejeitar.type = "button";
+
+            rejeitar.addEventListener("click", () => {
+                atualizarStatusVisita(
+                    item._id,
+                    "recusado"
+                );
+            });
+
+            acoes.append(aceitar, rejeitar);
+            card.appendChild(acoes);
+        }
+
+        listaVisitas.appendChild(card);
+    });
+}
+
+// ========================================
+// CONSULTAR SOLICITAÇÕES
+// ========================================
+
+async function carregarAgendamentos() {
+    if (
+        carregandoVisitas ||
+        !tokenAdmin() ||
+        document.getElementById("adminPainel")?.hidden
+    ) {
+        return;
+    }
+
+    carregandoVisitas = true;
+
+    if (botaoAtualizarVisitas) {
+        botaoAtualizarVisitas.disabled = true;
+    }
+
+    mensagemVisitas.textContent =
+        "Carregando solicitações...";
+
+    try {
+        const resposta = await fetch(
+            `${API_ADMIN}/agendamentos`,
+            {
+                headers: {
+                    Authorization: `Bearer ${tokenAdmin()}`
+                },
+                cache: "no-store"
+            }
+        );
+
+        const dados = await resposta.json();
+
+        if (!resposta.ok) {
+            throw new Error(
+                dados.erro || "Erro ao consultar visitas."
+            );
+        }
+
+        if (!Array.isArray(dados)) {
+            throw new Error(
+                "Lista de agendamentos inválida."
+            );
+        }
+
+        agendamentos = dados;
+
+        renderizarAgendamentos();
+
+        mensagemVisitas.textContent =
+            `${dados.length} solicitação(ões) encontrada(s).`;
+
+    } catch (erro) {
+        console.error("Erro ao carregar agendamentos:", erro);
+
+        mensagemVisitas.textContent = erro.message;
+
+        listaVisitas.replaceChildren();
+    } finally {
+        carregandoVisitas = false;
+
+        if (botaoAtualizarVisitas) {
+            botaoAtualizarVisitas.disabled = false;
+        }
+    }
+}
+
+// ========================================
+// ACEITAR OU REJEITAR VISITA
+// ========================================
+
+async function atualizarStatusVisita(id, novoStatus) {
+    const acao = novoStatus === "confirmado"
+        ? "aceitar"
+        : "rejeitar";
+
+    if (!confirm(`Deseja ${acao} esta visita?`)) {
+        return;
+    }
+
+    listaVisitas.querySelectorAll("button").forEach(botao => {
+        botao.disabled = true;
+    });
+
+    mensagemVisitas.textContent =
+        "Salvando alteração...";
+
+    try {
+        const resposta = await fetch(
+            `${API_ADMIN}/agendamentos/${encodeURIComponent(id)}/status`,
+            {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${tokenAdmin()}`
+                },
+                body: JSON.stringify({
+                    status: novoStatus
+                })
+            }
+        );
+
+        const dados = await resposta.json();
+
+        if (!resposta.ok) {
+            throw new Error(
+                dados.erro || "Não foi possível atualizar."
+            );
+        }
+
+        agendamentos = agendamentos.map(item => {
+            if (item._id === id) {
+                return {
+                    ...item,
+                    status: novoStatus
+                };
+            }
+
+            return item;
+        });
+
+        renderizarAgendamentos();
+
+        mensagemVisitas.textContent =
+            dados.mensagem || "Solicitação atualizada.";
+
+    } catch (erro) {
+        console.error("Erro ao atualizar visita:", erro);
+
+        mensagemVisitas.textContent = erro.message;
+
+        renderizarAgendamentos();
+        await carregarAgendamentos();
+    }
+}
+
+// ========================================
+// EVENTOS DOS AGENDAMENTOS
+// ========================================
+
+filtroVisitas?.addEventListener(
+    "change",
+    renderizarAgendamentos
+);
+
+botaoAtualizarVisitas?.addEventListener(
+    "click",
+    carregarAgendamentos
+);
+
+// ========================================
+// INICIAR PAINEL ADMINISTRATIVO
 // ========================================
 
 window.addEventListener("admin-autenticado", () => {
-    if (!mapa) iniciarMapa();
+    if (!mapa) {
+        iniciarMapa();
+    }
+
     carregarImoveis();
+    carregarAgendamentos();
 });
+
+// Caso o painel já esteja autenticado
+if (
+    tokenAdmin() &&
+    !document.getElementById("adminPainel")?.hidden
+) {
+    if (!mapa) {
+        iniciarMapa();
+    }
+
+    carregarImoveis();
+    carregarAgendamentos();
+}
