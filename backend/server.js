@@ -7,6 +7,7 @@ import imovelRoutes from "./routes/imovelRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import agendamentoRoutes from "./routes/agendamentoRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+import Agendamento from "./models/Agendamento.js";
 
 // Carrega o .env que está na mesma pasta do server.js
 dotenv.config({
@@ -43,7 +44,9 @@ if (!process.env.MONGODB_URI) {
 
 mongoose
   .connect(process.env.MONGODB_URI)
-  .then(() => {
+  .then(async () => {
+    // Garante o índice único de horários antes de aceitar agendamentos.
+    await Agendamento.init();
     console.log("MongoDB conectado com sucesso!");
 
     app.listen(process.env.PORT || 3000, () => {
