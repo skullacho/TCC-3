@@ -18,6 +18,27 @@ async function autenticar(req, res, next) {
     next();
   } catch { return res.status(401).json({ erro: "Sua sessão expirou. Entre novamente." }); }
 }
+// Consulta pública: retorna somente os horários ocupados, sem dados pessoais.
+router.get("/disponibilidade", async (req, res) => {
+  const { imovelId, data } = req.query;
+  if (!mongoose.isValidObjectId(imovelId) || typeof data !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(data)) {
+    return res.status(400).json({ erro: "Informe um imóvel e uma data válidos." });
+  }
+  const [ano, mes, dia] = data.split("-").map(Number);
+  const dt = new Date(Date.UTC(ano, mes - 1, dia));
+  if (dt.toISOString().slice(0, 10) !== data) return res.status(400).json({ erro: "Data inválida." });
+  try {
+    const ocupados = await Agendamento.distinct("horario", {
+      imovel: imovelId, data, status: { $in: ["pendente", "confirmado"] }
+    });
+    res.set("Cache-Control", "no-store");
+    return res.json({ ocupados });
+  } catch (error) {
+    console.error("Erro ao consultar disponibilidade:", error);
+    return res.status(500).json({ erro: "Não foi possível consultar os horários." });
+  }
+});
+
 router.use(autenticar);
 router.get("/meus", async (req, res) => {
   try {
