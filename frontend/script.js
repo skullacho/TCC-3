@@ -603,7 +603,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("cidade")?.value || "todos";
 
         const bairro =
-            document.getElementById("bairro")?.value || "todos";
+            normalizar(document.getElementById("bairro")?.value || "");
 
         // NOVO FILTRO DE FINALIDADE
         const finalidade =
@@ -632,10 +632,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 return false;
             }
 
-            // BAIRRO
+            // FILTRO DE BAIRRO DIGITADO
             if (
-                bairro !== "todos" &&
-                normalizar(imovel.bairro) !== normalizar(bairro)
+                bairro &&
+                !normalizar(imovel.bairro).includes(bairro)
             ) {
                 return false;
             }
