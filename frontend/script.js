@@ -1,24 +1,9 @@
 
 document.addEventListener("DOMContentLoaded", () => {
-
-    // ==========================================
-    // CONFIGURAÇÕES
-    // ==========================================
-
     const API = "https://tcc-3-nnmd.onrender.com/api/imoveis";
     const API_AGENDA = "https://tcc-3-nnmd.onrender.com/api/agendamentos";
     const LOGIN_URL = "https://tcc-3-login.vercel.app/";
-
     const PENDENTE_KEY = "hangar_imovel_agendar";
-    const TOKEN_KEY = "hangar_token";
-
-    let todosImoveis = [];
-    let imoveisExibidos = [];
-
-    let imovelEscolhido = null;
-    let horarioEscolhido = null;
-    let disponibilidadeConfirmada = false;
-    let consultaAtual = 0;
 
     const container = document.querySelector(".cards-container");
     const contador = document.getElementById("contador");
@@ -30,28 +15,24 @@ document.addEventListener("DOMContentLoaded", () => {
     const mensagemAgenda = document.getElementById("agenda-mensagem");
     const listaAgenda = document.getElementById("lista-agendamentos");
 
-    const campoData = document.getElementById("agenda-data");
-    const campoTelefone = document.getElementById("agenda-telefone");
+    let todosImoveis = [];
+    let imoveisExibidos = [];
+    let imovelEscolhido = null;
+    let horarioEscolhido = null;
 
-    const botoesHorario = [
-        ...document.querySelectorAll(".agenda-horarios button")
-    ];
+    const token = () => sessionStorage.getItem("hangar_token");
 
-    const token = () => sessionStorage.getItem(TOKEN_KEY);
-
-    // ==========================================
+    // ========================================
     // RECEBER LOGIN
-    // ==========================================
+    // ========================================
 
-    const retornoAuth = new URLSearchParams(
-        window.location.hash.slice(1)
-    );
+    const retornoAuth = new URLSearchParams(location.hash.slice(1));
 
     if (retornoAuth.has("hangar_auth")) {
         const recebido = retornoAuth.get("hangar_auth");
 
         if (recebido) {
-            sessionStorage.setItem(TOKEN_KEY, recebido);
+            sessionStorage.setItem("hangar_token", recebido);
         }
 
         history.replaceState(
@@ -61,22 +42,33 @@ document.addEventListener("DOMContentLoaded", () => {
         );
     }
 
-    // ==========================================
-    // FUNÇÕES AUXILIARES
-    // ==========================================
+    function irParaLogin(imovelId = null) {
+        if (imovelId) {
+            sessionStorage.setItem(PENDENTE_KEY, String(imovelId));
+        }
 
-    function escapar(valor) {
-        return String(valor ?? "").replace(
-            /[&<>"']/g,
-            caractere => ({
-                "&": "&amp;",
-                "<": "&lt;",
-                ">": "&gt;",
-                '"': "&quot;",
-                "'": "&#39;"
-            })[caractere]
+        const destino = new URL(LOGIN_URL);
+
+        destino.searchParams.set(
+            "retorno",
+            location.origin + location.pathname + location.search
         );
+
+        location.assign(destino.toString());
     }
+
+    // ========================================
+    // MENU MOBILE
+    // ========================================
+
+    window.toggleMenu = function () {
+        document.getElementById("nav-container")
+            ?.classList.toggle("active");
+    };
+
+    // ========================================
+    // NORMALIZAR TEXTO
+    // ========================================
 
     function normalizar(texto) {
         return String(texto || "")
@@ -87,279 +79,9 @@ document.addEventListener("DOMContentLoaded", () => {
             .replace(/\s+/g, "-");
     }
 
-    function diaSP() {
-        const partes = new Intl.DateTimeFormat("pt-BR", {
-            timeZone: "America/Sao_Paulo",
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit"
-        }).formatToParts(new Date());
-
-        const parte = tipo =>
-            partes.find(item => item.type === tipo).value;
-
-        return `${parte("year")}-${parte("month")}-${parte("day")}`;
-    }
-
-    function amanhaSP() {
-        const data = new Date(`${diaSP()}T12:00:00Z`);
-
-        data.setUTCDate(data.getUTCDate() + 1);
-
-        return data.toISOString().slice(0, 10);
-    }
-
-    async function lerResposta(resposta) {
-        try {
-            return await resposta.json();
-        } catch {
-            throw new Error("Resposta inválida do servidor.");
-        }
-    }
-
-    function atualizarContador(quantidade) {
-        if (contador) {
-            contador.textContent =
-                `${quantidade} imóveis encontrados`;
-        }
-    }
-
-    // ==========================================
-    // MENU MOBILE
-    // ==========================================
-
-    window.toggleMenu = function () {
-        const nav = document.getElementById("nav-container");
-
-        if (nav) {
-            nav.classList.toggle("active");
-        }
-    };
-
-    // ==========================================
-    // LOGIN
-    // ==========================================
-
-    function irParaLogin(imovelId = null) {
-        if (imovelId) {
-            sessionStorage.setItem(
-                PENDENTE_KEY,
-                String(imovelId)
-            );
-        }
-
-        const destino = new URL(LOGIN_URL);
-
-        destino.searchParams.set(
-            "retorno",
-            location.origin + location.pathname + location.search
-        );
-
-        window.location.assign(destino.href);
-    }
-
-    // ==========================================
-    // LINK DE LOGIN NO AGENDAMENTO
-    // ==========================================
-
-    if (modalAgenda && formAgenda) {
-        const linkExistente = modalAgenda.querySelector(
-            "#agenda-link-login"
-        );
-
-        const link = linkExistente ||
-            document.createElement("a");
-
-        link.id = "agenda-link-login";
-
-        link.textContent = token()
-            ? "Você está conectado • Trocar de conta"
-            : "Entrar ou criar conta para agendar";
-
-        const destino = new URL(LOGIN_URL);
-
-        destino.searchParams.set(
-            "retorno",
-            location.href.split("#")[0]
-        );
-
-        link.href = destino.href;
-
-        link.style.cssText = `
-            display: inline-block;
-            margin: 12px 0;
-            color: #743737;
-            font-weight: 700;
-            text-decoration: underline;
-        `;
-
-        if (!linkExistente) {
-            formAgenda.before(link);
-        }
-    }
-
-    // ==========================================
-    // DISPONIBILIDADE DOS HORÁRIOS
-    // ==========================================
-
-    function limparHorarios() {
-        horarioEscolhido = null;
-        disponibilidadeConfirmada = false;
-
-        botoesHorario.forEach(botao => {
-            botao.disabled = true;
-            botao.classList.remove("selecionado");
-            botao.classList.remove("ocupado");
-            botao.title = "";
-        });
-    }
-
-    async function atualizarDisponibilidade() {
-        const numeroConsulta = ++consultaAtual;
-
-        limparHorarios();
-
-        const data = campoData?.value;
-
-        if (!imovelEscolhido || !data) {
-            if (mensagemAgenda) {
-                mensagemAgenda.textContent =
-                    "Escolha uma data para consultar os horários.";
-            }
-            return;
-        }
-
-        if (data <= diaSP()) {
-            mensagemAgenda.textContent =
-                "Escolha uma data futura.";
-            return;
-        }
-
-        mensagemAgenda.textContent =
-            "Consultando horários disponíveis...";
-
-        try {
-            const url = new URL(
-                `${API_AGENDA}/disponibilidade`
-            );
-
-            url.searchParams.set(
-                "imovelId",
-                imovelEscolhido._id
-            );
-
-            url.searchParams.set("data", data);
-
-            const resposta = await fetch(url.href, {
-                cache: "no-store"
-            });
-
-            const dados = await lerResposta(resposta);
-
-            if (numeroConsulta !== consultaAtual) {
-                return;
-            }
-
-            if (!resposta.ok) {
-                throw new Error(
-                    dados.erro ||
-                    `Erro HTTP ${resposta.status}`
-                );
-            }
-
-            if (!Array.isArray(dados.ocupados)) {
-                throw new Error(
-                    "O servidor não retornou os horários corretamente."
-                );
-            }
-
-            const ocupados = new Set(dados.ocupados);
-
-            botoesHorario.forEach(botao => {
-                const ocupado = ocupados.has(
-                    botao.dataset.hora
-                );
-
-                botao.disabled = ocupado;
-
-                botao.classList.toggle(
-                    "ocupado",
-                    ocupado
-                );
-
-                botao.title = ocupado
-                    ? "Horário já reservado"
-                    : "Horário disponível";
-            });
-
-            disponibilidadeConfirmada = true;
-
-            const todosOcupados = botoesHorario.every(
-                botao => botao.disabled
-            );
-
-            mensagemAgenda.textContent = todosOcupados
-                ? "Todos os horários estão ocupados nessa data."
-                : "Selecione um horário disponível.";
-
-        } catch (erro) {
-            if (numeroConsulta !== consultaAtual) {
-                return;
-            }
-
-            limparHorarios();
-
-            mensagemAgenda.textContent =
-                "Não foi possível consultar os horários. " +
-                "Isso não significa que estejam ocupados. " +
-                erro.message;
-
-            console.error(
-                "Erro ao consultar disponibilidade:",
-                erro
-            );
-        }
-    }
-
-    if (campoData) {
-        campoData.min = amanhaSP();
-
-        campoData.addEventListener(
-            "change",
-            atualizarDisponibilidade
-        );
-    }
-
-    // ==========================================
-    // SELECIONAR HORÁRIO
-    // ==========================================
-
-    botoesHorario.forEach(botao => {
-        botao.addEventListener("click", () => {
-            if (
-                botao.disabled ||
-                !disponibilidadeConfirmada
-            ) {
-                return;
-            }
-
-            horarioEscolhido = botao.dataset.hora;
-
-            botoesHorario.forEach(outro => {
-                outro.classList.toggle(
-                    "selecionado",
-                    outro === botao
-                );
-            });
-
-            mensagemAgenda.textContent =
-                `Horário selecionado: ${horarioEscolhido}`;
-        });
-    });
-
-    // ==========================================
-    // ABRIR AGENDAMENTO
-    // ==========================================
+    // ========================================
+    // AGENDAMENTO
+    // ========================================
 
     function abrirAgenda(imovel) {
         if (!token()) {
@@ -367,101 +89,81 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        if (!modalAgenda || !formAgenda) {
-            console.error(
-                "O formulário de agendamento não foi encontrado."
-            );
-            return;
-        }
-
         imovelEscolhido = imovel;
+        horarioEscolhido = null;
 
-        consultaAtual++;
+        document.querySelectorAll(".agenda-horarios button")
+            .forEach(botao => {
+                botao.classList.remove("selecionado");
+            });
 
-        limparHorarios();
+        document.getElementById("agenda-imovel").textContent =
+            imovel.titulo || "Imóvel";
 
+        mensagemAgenda.textContent = "";
         formAgenda.reset();
 
-        document.getElementById(
-            "agenda-imovel"
-        ).textContent = imovel.titulo || "Imóvel";
-
-        mensagemAgenda.textContent =
-            "Escolha uma data para consultar os horários.";
-
-        if (campoData) {
-            campoData.min = amanhaSP();
-            campoData.value = amanhaSP();
-        }
-
         modalAgenda.hidden = false;
-
-        atualizarDisponibilidade();
-
-        campoData?.focus();
+        document.getElementById("agenda-data").focus();
     }
 
-    // ==========================================
-    // FECHAR AGENDAMENTO
-    // ==========================================
-
-    function fecharAgenda() {
-        if (modalAgenda) {
+    document.getElementById("fechar-agendamento")
+        .addEventListener("click", () => {
             modalAgenda.hidden = true;
-        }
+        });
 
-        consultaAtual++;
-    }
-
-    document.getElementById(
-        "fechar-agendamento"
-    )?.addEventListener("click", fecharAgenda);
-
-    modalAgenda?.addEventListener("click", event => {
+    modalAgenda.addEventListener("click", event => {
         if (event.target === modalAgenda) {
-            fecharAgenda();
+            modalAgenda.hidden = true;
         }
     });
 
     document.addEventListener("keydown", event => {
         if (event.key === "Escape") {
-            fecharAgenda();
+            modalAgenda.hidden = true;
         }
     });
 
-    // ==========================================
-    // ENVIAR AGENDAMENTO
-    // ==========================================
+    document.querySelectorAll(".agenda-horarios button")
+        .forEach(botao => {
+            botao.addEventListener("click", () => {
+                horarioEscolhido = botao.dataset.hora;
 
-    formAgenda?.addEventListener("submit", async event => {
+                document.querySelectorAll(".agenda-horarios button")
+                    .forEach(item => {
+                        item.classList.toggle(
+                            "selecionado",
+                            item === botao
+                        );
+                    });
+            });
+        });
+
+    const diaSP = () => {
+        return new Intl.DateTimeFormat("en-CA", {
+            timeZone: "America/Sao_Paulo",
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit"
+        }).format(new Date());
+    };
+
+    document.getElementById("agenda-data").min = diaSP();
+
+    formAgenda.addEventListener("submit", async event => {
         event.preventDefault();
 
-        if (!token()) {
-            irParaLogin(imovelEscolhido?._id);
+        if (!horarioEscolhido) {
+            mensagemAgenda.textContent = "Escolha um horário.";
             return;
         }
 
-        if (
-            !imovelEscolhido ||
-            !disponibilidadeConfirmada ||
-            !horarioEscolhido
-        ) {
-            mensagemAgenda.textContent =
-                "Selecione um horário disponível.";
-            return;
-        }
-
-        const botaoEnviar = formAgenda.querySelector(
+        const botao = formAgenda.querySelector(
             'button[type="submit"]'
         );
 
-        const data = campoData.value;
-        const horario = horarioEscolhido;
-
-        botaoEnviar.disabled = true;
-
-        mensagemAgenda.textContent =
-            "Registrando solicitação de visita...";
+        botao.disabled = true;
+        mensagemAgenda.textContent = "Registrando solicitação...";
 
         try {
             const resposta = await fetch(API_AGENDA, {
@@ -472,63 +174,49 @@ document.addEventListener("DOMContentLoaded", () => {
                 },
                 body: JSON.stringify({
                     imovelId: imovelEscolhido._id,
-                    data,
-                    horario,
-                    telefone: campoTelefone.value.trim()
+                    data: document.getElementById("agenda-data").value,
+                    horario: horarioEscolhido,
+                    telefone: document.getElementById("agenda-telefone").value
                 })
             });
 
-            const dados = await lerResposta(resposta);
+            const dados = await resposta.json();
 
             if (!resposta.ok) {
-                if (resposta.status === 401) {
-                    sessionStorage.removeItem(TOKEN_KEY);
-                }
-
                 throw new Error(
-                    dados.erro ||
-                    `Erro ao agendar (${resposta.status}).`
+                    dados.erro || "Falha ao solicitar visita."
                 );
             }
 
+            mensagemAgenda.textContent =
+                dados.mensagem || "Visita solicitada com sucesso!";
+
             await carregarMeusAgendamentos();
 
-            await atualizarDisponibilidade();
+            formAgenda.reset();
+            horarioEscolhido = null;
 
-            campoTelefone.value = "";
-
-            mensagemAgenda.textContent =
-                dados.mensagem ||
-                "Visita solicitada com sucesso!";
+            document.querySelectorAll(".agenda-horarios button")
+                .forEach(item => {
+                    item.classList.remove("selecionado");
+                });
 
         } catch (erro) {
             mensagemAgenda.textContent = erro.message;
 
-            console.error("Erro no agendamento:", erro);
-
-            if (
-                /horário|ocupado|solicitado/i.test(
-                    erro.message
-                )
-            ) {
-                await atualizarDisponibilidade();
-
-                mensagemAgenda.textContent =
-                    "Esse horário não está mais disponível. " +
-                    "Escolha outro.";
+            if (/sessão|login/i.test(erro.message)) {
+                sessionStorage.removeItem("hangar_token");
             }
         } finally {
-            botaoEnviar.disabled = false;
+            botao.disabled = false;
         }
     });
 
-    // ==========================================
-    // MEUS AGENDAMENTOS
-    // ==========================================
+    // ========================================
+    // MINHAS VISITAS
+    // ========================================
 
     async function carregarMeusAgendamentos() {
-        if (!listaAgenda) return;
-
         if (!token()) {
             listaAgenda.textContent =
                 "Entre na sua conta para consultar suas visitas.";
@@ -538,27 +226,23 @@ document.addEventListener("DOMContentLoaded", () => {
         listaAgenda.textContent = "Carregando...";
 
         try {
-            const resposta = await fetch(
-                `${API_AGENDA}/meus`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token()}`
-                    }
+            const resposta = await fetch(`${API_AGENDA}/meus`, {
+                headers: {
+                    Authorization: `Bearer ${token()}`
                 }
-            );
+            });
 
-            const dados = await lerResposta(resposta);
+            const dados = await resposta.json();
 
             if (!resposta.ok) {
                 throw new Error(
-                    dados.erro ||
-                    "Erro ao consultar visitas."
+                    dados.erro || "Erro ao consultar visitas."
                 );
             }
 
             listaAgenda.replaceChildren();
 
-            if (!Array.isArray(dados) || !dados.length) {
+            if (!dados.length) {
                 listaAgenda.textContent =
                     "Você ainda não solicitou visitas.";
                 return;
@@ -569,85 +253,59 @@ document.addEventListener("DOMContentLoaded", () => {
                 linha.className = "agenda-item";
 
                 const titulo = document.createElement("strong");
-
                 titulo.textContent =
-                    item.imovel?.titulo ||
-                    "Imóvel indisponível";
+                    item.imovel?.titulo || "Imóvel indisponível";
 
                 const descricao = document.createElement("span");
-
-                const dataFormatada = String(
-                    item.data || ""
-                ).split("-").reverse().join("/");
-
                 descricao.textContent =
-                    `${dataFormatada} às ${item.horario} • ${item.status}`;
+                    `${item.data.split("-").reverse().join("/")} ` +
+                    `às ${item.horario} • ${item.status}`;
 
                 linha.append(titulo, descricao);
 
                 if (item.status === "pendente") {
-                    const cancelar = document.createElement(
-                        "button"
-                    );
+                    const cancelar = document.createElement("button");
 
                     cancelar.className = "agenda-cancelar";
                     cancelar.type = "button";
                     cancelar.textContent = "Cancelar";
                     cancelar.style.marginLeft = "12px";
 
-                    cancelar.addEventListener(
-                        "click",
-                        async () => {
-                            if (
-                                !confirm(
-                                    "Cancelar esta solicitação?"
-                                )
-                            ) {
-                                return;
-                            }
-
-                            try {
-                                const respostaCancelar = await fetch(
-                                    `${API_AGENDA}/${item._id}/cancelar`,
-                                    {
-                                        method: "PATCH",
-                                        headers: {
-                                            Authorization:
-                                                `Bearer ${token()}`
-                                        }
-                                    }
-                                );
-
-                                const dadosCancelar =
-                                    await lerResposta(
-                                        respostaCancelar
-                                    );
-
-                                if (!respostaCancelar.ok) {
-                                    throw new Error(
-                                        dadosCancelar.erro ||
-                                        "Erro ao cancelar."
-                                    );
-                                }
-
-                                await carregarMeusAgendamentos();
-
-                                if (
-                                    modalAgenda &&
-                                    !modalAgenda.hidden
-                                ) {
-                                    await atualizarDisponibilidade();
-                                }
-                            } catch (erro) {
-                                alert(erro.message);
-                            }
+                    cancelar.addEventListener("click", async () => {
+                        if (!confirm("Cancelar esta solicitação?")) {
+                            return;
                         }
-                    );
 
-                    linha.append(cancelar);
+                        try {
+                            const respostaCancelar = await fetch(
+                                `${API_AGENDA}/${item._id}/cancelar`,
+                                {
+                                    method: "PATCH",
+                                    headers: {
+                                        Authorization: `Bearer ${token()}`
+                                    }
+                                }
+                            );
+
+                            if (!respostaCancelar.ok) {
+                                const erro = await respostaCancelar.json();
+
+                                throw new Error(
+                                    erro.erro || "Erro ao cancelar."
+                                );
+                            }
+
+                            await carregarMeusAgendamentos();
+
+                        } catch (erro) {
+                            alert(erro.message);
+                        }
+                    });
+
+                    linha.appendChild(cancelar);
                 }
 
-                listaAgenda.append(linha);
+                listaAgenda.appendChild(linha);
             });
 
         } catch (erro) {
@@ -655,55 +313,41 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    document.getElementById(
-        "btn-meus-agendamentos"
-    )?.addEventListener("click", () => {
-        if (!token()) {
-            sessionStorage.setItem(
-                "hangar_abrir_meus",
-                "1"
-            );
+    document.getElementById("btn-meus-agendamentos")
+        .addEventListener("click", () => {
+            if (!token()) {
+                sessionStorage.setItem("hangar_abrir_meus", "1");
+                irParaLogin();
+                return;
+            }
 
-            irParaLogin();
-            return;
-        }
-
-        carregarMeusAgendamentos();
-    });
+            carregarMeusAgendamentos();
+        });
 
     if (token()) {
         carregarMeusAgendamentos();
 
-        if (
-            sessionStorage.getItem(
-                "hangar_abrir_meus"
-            ) === "1"
-        ) {
-            sessionStorage.removeItem(
-                "hangar_abrir_meus"
-            );
+        if (sessionStorage.getItem("hangar_abrir_meus") === "1") {
+            sessionStorage.removeItem("hangar_abrir_meus");
 
             requestAnimationFrame(() => {
-                document.getElementById(
-                    "meus-agendamentos"
-                )?.scrollIntoView({
-                    behavior: "smooth"
-                });
+                document.getElementById("meus-agendamentos")
+                    ?.scrollIntoView({
+                        behavior: "smooth"
+                    });
             });
         }
     }
 
-    // ==========================================
+    // ========================================
     // CARREGAR IMÓVEIS
-    // ==========================================
+    // ========================================
 
     async function carregarImoveis() {
         if (!container) return;
 
         container.innerHTML = `
-            <p style="padding:20px">
-                Carregando imóveis...
-            </p>
+            <p style="padding:20px">Carregando imóveis...</p>
         `;
 
         try {
@@ -713,23 +357,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 throw new Error("Erro ao buscar imóveis.");
             }
 
-            const imoveis = await lerResposta(resposta);
+            const imoveis = await resposta.json();
 
             if (!Array.isArray(imoveis)) {
-                throw new Error(
-                    "Lista de imóveis inválida."
-                );
+                throw new Error("Resposta inválida da API.");
             }
 
             todosImoveis = imoveis;
             imoveisExibidos = [...imoveis];
 
-            renderizarImoveis(imoveis);
-
-            // Retomar agendamento após login
-            const pendenteId = sessionStorage.getItem(
-                PENDENTE_KEY
-            );
+            // Retomar agendamento após o login
+            const pendenteId = sessionStorage.getItem(PENDENTE_KEY);
 
             if (pendenteId && token()) {
                 const escolhido = imoveis.find(
@@ -745,11 +383,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
 
+            filtrarImoveis();
+
         } catch (erro) {
-            console.error(
-                "Erro ao carregar imóveis:",
-                erro
-            );
+            console.error("Erro ao carregar imóveis:", erro);
 
             container.innerHTML = `
                 <p style="padding:20px">
@@ -761,14 +398,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // ==========================================
-    // RENDERIZAR CARDS
-    // ==========================================
+    // ========================================
+    // CRIAR CARDS
+    // ========================================
 
     function renderizarImoveis(imoveis) {
         if (!container) return;
 
-        container.innerHTML = "";
+        container.replaceChildren();
 
         if (imoveis.length === 0) {
             container.innerHTML = `
@@ -783,7 +420,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         imoveis.forEach(imovel => {
             const card = document.createElement("div");
-
             card.className = "card";
 
             card.dataset.id = imovel._id;
@@ -791,132 +427,153 @@ document.addEventListener("DOMContentLoaded", () => {
             card.dataset.cidade = normalizar(imovel.cidade);
             card.dataset.bairro = normalizar(imovel.bairro);
             card.dataset.preco = imovel.preco || 0;
+            card.dataset.finalidade = normalizar(imovel.finalidade);
 
-            const imagem =
-                Array.isArray(imovel.imagens) &&
-                imovel.imagens.length > 0
-                    ? imovel.imagens[0]
-                    : "https://via.placeholder.com/600x400?text=Sem+imagem";
+            // IMAGEM
+            const imagem = imovel.imagens?.length
+                ? imovel.imagens[0]
+                : "https://via.placeholder.com/600x400?text=Sem+imagem";
 
-            let tag = "";
-
-            if (imovel.lancamento) {
-                tag = "LANÇAMENTO";
-            } else if (imovel.destaque) {
-                tag = "DESTAQUE";
-            }
-
-            const preco = Number(
-                imovel.preco || 0
-            ).toLocaleString("pt-BR", {
-                style: "currency",
-                currency: "BRL"
-            });
-
-            const area = Number(imovel.area) > 0
+            const area = imovel.area > 0
                 ? `${imovel.area}m²`
                 : "-";
 
-            const quartos = Number(imovel.quartos) > 0
+            const quartos = imovel.quartos > 0
                 ? `${imovel.quartos} quartos`
                 : "-";
 
-            const vagas = Number(imovel.vagas) > 0
+            const vagas = imovel.vagas > 0
                 ? `${imovel.vagas} vagas`
                 : "-";
 
-            const banheiros = Number(imovel.banheiros) > 0
+            const banheiros = imovel.banheiros > 0
                 ? `${imovel.banheiros} banhos`
                 : "-";
 
-            card.innerHTML = `
-                <div class="card-image">
-                    <img
-                        src="${escapar(imagem)}"
-                        alt="${escapar(imovel.titulo || "Imóvel")}"
-                    >
+            const preco = Number(imovel.preco || 0)
+                .toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL"
+                });
 
-                    ${
-                        tag
-                            ? `<span class="tag">${tag}</span>`
-                            : ""
-                    }
-                </div>
+            // ========================================
+            // ETIQUETA DE VENDA OU ALUGUEL
+            // ========================================
 
-                <div class="card-content">
-                    <h3>
-                        ${escapar(imovel.bairro || "")}
-                        ${
-                            imovel.cidade
-                                ? ` | ${escapar(imovel.cidade)}`
-                                : ""
-                        }
-                    </h3>
+            const finalidade = normalizar(imovel.finalidade);
 
-                    <p class="descricao">
-                        ${escapar(imovel.titulo || "Imóvel")}
-                    </p>
+            const textoFinalidade =
+                finalidade === "venda" ? "VENDA" :
+                finalidade === "aluguel" ? "ALUGUEL" :
+                "";
 
-                    <p class="preco">
-                        ${preco}
-                    </p>
-                </div>
+            // Mantém a etiqueta original de destaque
+            const textoTag = imovel.lancamento
+                ? "LANÇAMENTO"
+                : imovel.destaque
+                    ? "DESTAQUE"
+                    : "";
 
-                <div class="divider"></div>
+            // ========================================
+            // ESTRUTURA DO CARD
+            // ========================================
 
-                <div class="toggle-btn">
-                    <i class="fa-solid fa-chevron-down"></i>
-                </div>
+            const areaImagem = document.createElement("div");
+            areaImagem.className = "card-image";
 
-                <div class="extra-info">
-                    <div class="info">
-                        <span>${escapar(area)}</span>
-                        <span>${escapar(quartos)}</span>
-                        <span>${escapar(vagas)}</span>
-                        <span>${escapar(banheiros)}</span>
-                    </div>
-                </div>
+            const foto = document.createElement("img");
+            foto.src = imagem;
+            foto.alt = imovel.titulo || "Imóvel";
+            foto.loading = "lazy";
 
-                <button
-                    type="button"
-                    class="card-agendar"
-                >
-                    Agendar visita
-                </button>
-            `;
+            areaImagem.appendChild(foto);
 
-            // Agendar pelo card
-            card.querySelector(
-                ".card-agendar"
-            ).addEventListener("click", event => {
+            if (textoTag) {
+                const tag = document.createElement("span");
+                tag.className = "tag";
+                tag.textContent = textoTag;
+                areaImagem.appendChild(tag);
+            }
+
+            if (textoFinalidade) {
+                const etiqueta = document.createElement("span");
+
+                etiqueta.className =
+                    `tag-finalidade finalidade-${finalidade}`;
+
+                etiqueta.textContent = textoFinalidade;
+
+                areaImagem.appendChild(etiqueta);
+            }
+
+            const conteudo = document.createElement("div");
+            conteudo.className = "card-content";
+
+            const local = document.createElement("h3");
+            local.textContent =
+                `${imovel.bairro || ""}` +
+                `${imovel.cidade ? " | " + imovel.cidade : ""}`;
+
+            const descricao = document.createElement("p");
+            descricao.className = "descricao";
+            descricao.textContent = imovel.titulo || "Imóvel";
+
+            const valor = document.createElement("p");
+            valor.className = "preco";
+            valor.textContent = preco;
+
+            conteudo.append(local, descricao, valor);
+
+            const divisor = document.createElement("div");
+            divisor.className = "divider";
+
+            const toggle = document.createElement("div");
+            toggle.className = "toggle-btn";
+            toggle.innerHTML =
+                '<i class="fa-solid fa-chevron-down"></i>';
+
+            const extras = document.createElement("div");
+            extras.className = "extra-info";
+
+            const informacoes = document.createElement("div");
+            informacoes.className = "info";
+
+            [area, quartos, vagas, banheiros].forEach(texto => {
+                const span = document.createElement("span");
+                span.textContent = texto;
+                informacoes.appendChild(span);
+            });
+
+            extras.appendChild(informacoes);
+
+            const agendar = document.createElement("button");
+            agendar.type = "button";
+            agendar.className = "card-agendar";
+            agendar.textContent = "Agendar visita";
+
+            agendar.addEventListener("click", event => {
                 event.stopPropagation();
-
                 abrirAgenda(imovel);
             });
 
-            // Expandir detalhes
-            card.querySelector(
-                ".toggle-btn"
-            ).addEventListener("click", event => {
+            toggle.addEventListener("click", event => {
                 event.stopPropagation();
-
                 card.classList.toggle("active");
             });
 
-            // Abrir página individual do imóvel
             card.addEventListener("click", () => {
-                const destino = new URL(
-                    "./imovel/index.html",
-                    window.location.href
-                );
-
-                destino.searchParams.set(
-                    "id",
-                    imovel._id
-                );
-
-                window.location.href = destino.href;
+                window.location.href =
+                    `../imovel/index.html?id=${encodeURIComponent(imovel._id)}`;
             });
+
+            card.append(
+                areaImagem,
+                conteudo,
+                divisor,
+                toggle,
+                extras,
+                agendar
+            );
 
             container.appendChild(card);
         });
@@ -924,22 +581,36 @@ document.addEventListener("DOMContentLoaded", () => {
         atualizarContador(imoveis.length);
     }
 
-    // ==========================================
+    // ========================================
+    // CONTADOR
+    // ========================================
+
+    function atualizarContador(quantidade) {
+        if (contador) {
+            contador.textContent =
+                `${quantidade} ${quantidade === 1
+                    ? "imóvel encontrado"
+                    : "imóveis encontrados"}`;
+        }
+    }
+
+    // ========================================
     // FILTRAR IMÓVEIS
-    // ==========================================
+    // ========================================
 
     function filtrarImoveis() {
         const cidade =
-            document.getElementById("cidade")?.value ||
-            "todos";
+            document.getElementById("cidade")?.value || "todos";
 
         const bairro =
-            document.getElementById("bairro")?.value ||
-            "todos";
+            document.getElementById("bairro")?.value || "todos";
 
-        const precoMin = Number(
-            document.getElementById("precoMin")?.value
-        ) || 0;
+        // NOVO FILTRO DE FINALIDADE
+        const finalidade =
+            document.getElementById("finalidade")?.value || "todos";
+
+        const precoMin =
+            Number(document.getElementById("precoMin")?.value) || 0;
 
         const precoMaxInput =
             document.getElementById("precoMax")?.value;
@@ -949,43 +620,46 @@ document.addEventListener("DOMContentLoaded", () => {
             : Infinity;
 
         const tiposSelecionados = Array.from(
-            document.querySelectorAll(
-                ".opcoes button.active"
-            )
+            document.querySelectorAll(".opcoes button.active")
         ).map(botao => normalizar(botao.textContent));
 
         const filtrados = todosImoveis.filter(imovel => {
+            // CIDADE
             if (
                 cidade !== "todos" &&
-                normalizar(imovel.cidade) !==
-                normalizar(cidade)
+                normalizar(imovel.cidade) !== normalizar(cidade)
             ) {
                 return false;
             }
 
+            // BAIRRO
             if (
                 bairro !== "todos" &&
-                normalizar(imovel.bairro) !==
-                normalizar(bairro)
+                normalizar(imovel.bairro) !== normalizar(bairro)
             ) {
                 return false;
             }
 
+            // FINALIDADE: VENDA OU ALUGUEL
+            if (
+                finalidade !== "todos" &&
+                normalizar(imovel.finalidade) !== normalizar(finalidade)
+            ) {
+                return false;
+            }
+
+            // TIPO
             if (
                 tiposSelecionados.length > 0 &&
-                !tiposSelecionados.includes(
-                    normalizar(imovel.tipo)
-                )
+                !tiposSelecionados.includes(normalizar(imovel.tipo))
             ) {
                 return false;
             }
 
+            // PREÇO
             const preco = Number(imovel.preco || 0);
 
-            if (
-                preco < precoMin ||
-                preco > precoMax
-            ) {
+            if (preco < precoMin || preco > precoMax) {
                 return false;
             }
 
@@ -993,76 +667,61 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         imoveisExibidos = filtrados;
-
         aplicarOrdenacao(filtrados);
     }
 
-    // ==========================================
-    // ORDENAR IMÓVEIS
-    // ==========================================
+    // ========================================
+    // ORDENAÇÃO
+    // ========================================
 
     function aplicarOrdenacao(imoveis) {
         const ordem =
-            selectOrdenar?.value ||
-            "Mais relevantes";
+            selectOrdenar?.value || "Mais relevantes";
 
         const ordenados = [...imoveis];
 
         if (ordem === "Menor preço") {
             ordenados.sort(
-                (a, b) =>
-                    Number(a.preco || 0) -
-                    Number(b.preco || 0)
+                (a, b) => Number(a.preco || 0) - Number(b.preco || 0)
             );
         }
 
         if (ordem === "Maior preço") {
             ordenados.sort(
-                (a, b) =>
-                    Number(b.preco || 0) -
-                    Number(a.preco || 0)
+                (a, b) => Number(b.preco || 0) - Number(a.preco || 0)
             );
         }
 
         renderizarImoveis(ordenados);
     }
 
-    // ==========================================
+    // ========================================
     // BOTÕES DE TIPO
-    // ==========================================
+    // ========================================
 
-    document.querySelectorAll(
-        ".opcoes button"
-    ).forEach(botao => {
-        botao.addEventListener("click", () => {
-            botao.classList.toggle("active");
+    document.querySelectorAll(".opcoes button")
+        .forEach(botao => {
+            botao.addEventListener("click", () => {
+                botao.classList.toggle("active");
+            });
         });
+
+    // ========================================
+    // EVENTOS DOS FILTROS
+    // ========================================
+
+    btnFiltrar?.addEventListener("click", filtrarImoveis);
+
+    document.getElementById("finalidade")
+        ?.addEventListener("change", filtrarImoveis);
+
+    selectOrdenar?.addEventListener("change", () => {
+        aplicarOrdenacao(imoveisExibidos);
     });
 
-    // ==========================================
-    // BOTÃO FILTRAR
-    // ==========================================
-
-    btnFiltrar?.addEventListener(
-        "click",
-        filtrarImoveis
-    );
-
-    // ==========================================
-    // ORDENAÇÃO
-    // ==========================================
-
-    selectOrdenar?.addEventListener(
-        "change",
-        () => {
-            aplicarOrdenacao(imoveisExibidos);
-        }
-    );
-
-    // ==========================================
-    // INICIAR PÁGINA
-    // ==========================================
+    // ========================================
+    // INICIALIZAR
+    // ========================================
 
     carregarImoveis();
-
 });
