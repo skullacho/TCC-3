@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -5,13 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Imóveis | Hangar Prime Imóveis</title>
 
-    <!-- Fontes e Ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- CABEÇALHO GLOBAL (IGUAL À HOME PAGE) -->
+    <!-- CABEÇALHO GLOBAL -->
     <header>
         <a href="https://home-page-bice-ten.vercel.app/" class="header-container" id="logo-container" aria-label="Ir para a página inicial">
             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -36,10 +36,9 @@
         </div>
     </header>
 
-    <!-- ESTRUTURA PRINCIPAL COM FILTROS E LISTAGEM -->
+    <!-- FILTROS E LISTAGEM -->
     <div class="container">
 
-        <!-- SIDEBAR DE FILTROS -->
         <aside class="sidebar">
 
             <div class="filtro">
@@ -58,6 +57,16 @@
                     <option value="todos">Todos</option>
                     <option value="centro">Centro</option>
                     <option value="zona-sul">Zona Sul</option>
+                </select>
+            </div>
+
+            <!-- NOVO FILTRO -->
+            <div class="filtro">
+                <label for="finalidade">Finalidade</label>
+                <select id="finalidade">
+                    <option value="todos">Todos os imóveis</option>
+                    <option value="venda">Comprar</option>
+                    <option value="aluguel">Alugar</option>
                 </select>
             </div>
 
@@ -83,7 +92,6 @@
 
         </aside>
 
-        <!-- CONTEÚDO PRINCIPAL DA LISTA -->
         <main class="content">
 
             <div class="topo-lista">
@@ -102,37 +110,50 @@
             </div>
 
             <div class="cards-container"></div>
+
             <section class="meus-agendamentos" id="meus-agendamentos">
-                <div class="agendamentos-topo"><h2>Minhas visitas</h2><button type="button" id="btn-meus-agendamentos">Consultar agendamentos</button></div>
-                <div id="lista-agendamentos" aria-live="polite">Entre na sua conta para consultar suas visitas.</div>
+                <div class="agendamentos-topo">
+                    <h2>Minhas visitas</h2>
+                    <button type="button" id="btn-meus-agendamentos">Consultar agendamentos</button>
+                </div>
+                <div id="lista-agendamentos" aria-live="polite">
+                    Entre na sua conta para consultar suas visitas.
+                </div>
             </section>
 
         </main>
-
     </div>
 
+    <!-- MODAL DE AGENDAMENTO -->
     <div id="modal-agendamento" class="agenda-overlay" hidden>
-      <section class="agenda-dialog" role="dialog" aria-modal="true" aria-labelledby="agenda-titulo">
-        <button type="button" id="fechar-agendamento" class="agenda-fechar" aria-label="Fechar">&times;</button>
-        <h2 id="agenda-titulo">Agendar visita</h2>
-        <p id="agenda-imovel"></p>
-        <form id="form-agendamento">
-          <label for="agenda-data">Data da visita</label>
-          <input type="date" id="agenda-data" required>
-          <label>Horário disponível</label>
-          <div class="agenda-horarios" role="group" aria-label="Escolha o horário">
-            <button type="button" data-hora="09:00">09:00</button><button type="button" data-hora="11:00">11:00</button>
-            <button type="button" data-hora="14:00">14:00</button><button type="button" data-hora="16:00">16:00</button>
-          </div>
-          <label for="agenda-telefone">Seu WhatsApp</label>
-          <input type="tel" id="agenda-telefone" placeholder="(11) 99999-9999" required maxlength="30">
-          <p id="agenda-mensagem" aria-live="polite"></p>
-          <button type="submit" class="agenda-enviar">Solicitar visita</button>
-        </form>
-      </section>
+        <section class="agenda-dialog" role="dialog" aria-modal="true" aria-labelledby="agenda-titulo">
+            <button type="button" id="fechar-agendamento" class="agenda-fechar" aria-label="Fechar">&times;</button>
+
+            <h2 id="agenda-titulo">Agendar visita</h2>
+            <p id="agenda-imovel"></p>
+
+            <form id="form-agendamento">
+                <label for="agenda-data">Data da visita</label>
+                <input type="date" id="agenda-data" required>
+
+                <label>Horário disponível</label>
+                <div class="agenda-horarios" role="group" aria-label="Escolha o horário">
+                    <button type="button" data-hora="09:00">09:00</button>
+                    <button type="button" data-hora="11:00">11:00</button>
+                    <button type="button" data-hora="14:00">14:00</button>
+                    <button type="button" data-hora="16:00">16:00</button>
+                </div>
+
+                <label for="agenda-telefone">Seu WhatsApp</label>
+                <input type="tel" id="agenda-telefone" placeholder="(11) 99999-9999" required maxlength="30">
+
+                <p id="agenda-mensagem" aria-live="polite"></p>
+                <button type="submit" class="agenda-enviar">Solicitar visita</button>
+            </form>
+        </section>
     </div>
 
-    <!-- RODAPÉ GLOBAL (IGUAL À HOME PAGE) -->
+    <!-- RODAPÉ -->
     <footer class="footer">
         <div class="footer-container">
 
